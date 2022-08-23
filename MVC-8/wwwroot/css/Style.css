@@ -1,0 +1,294 @@
+﻿
+#f2 {
+    display: "none"
+}
+
+#f1 {
+    display: "none"
+}
+
+.btn-h3 {
+    font-size: large;
+}
+
+/*** Page ***/
+html {
+    height: 100%;
+    display: flex;
+    font-family: sans-serif;
+    background-color: gainsboro;
+}
+
+body {
+    width: 1024px;
+    max-width: 100%;
+    margin: 2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow-y: hidden;
+}
+
+/**************************
+*** General
+**************************/
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+    *:not(input) {
+        border-style: solid;
+        border-width: 0px;
+    }
+
+
+
+/* Headers */
+
+h1 {
+    padding-bottom: 0.5em;
+}
+
+/* Buttons */
+
+.button {
+    height: 2em;
+    min-width: 6em;
+    padding: 0;
+    box-shadow: 0.2em 0.2em 0.1em rgb(128, 128, 128);
+    border-width: 2px;
+    border-radius: 0.5em;
+}
+
+    .button:hover {
+        border-width: 3px;
+        box-shadow: 0.24em 0.24em 0.11em rgb(128, 128, 128);
+        font-weight: bold;
+    }
+
+    .button:active {
+        position: relative;
+        left: 0.1em;
+        top: 0.1em;
+        box-shadow: 0.1em 0.1em 0.05em rgb(128, 128, 128);
+    }
+
+    .button.reset {
+        background-color: lightsalmon;
+    }
+
+        .button.reset:hover {
+            background-color: rgb(255, 120, 100);
+        }
+
+    .button.submit {
+        background-color: lightgreen;
+    }
+
+        .button.submit:hover {
+            background-color: rgb(132, 251, 132);
+        }
+
+.display_hidden {
+    display: none;
+}
+.display_block {
+    display: block;
+}
+/** sectionButtons */
+.sectionButtons {
+    display: flex;
+    justify-content: flex-start;
+}
+/** Forms **/
+form {
+    font-size: 120%;
+    border-radius: 1em;
+    border-width: 3px;
+    padding: 0.5em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 1em;
+}
+
+    form > * {
+        margin-top: 0;
+    }
+
+
+.formgrid {
+    display: grid;
+    padding-bottom: 0em;
+    margin-top: 0em;
+    gap: 0.1em;
+}
+
+
+    .formgrid * {
+        padding: 0em;
+    }
+
+    .formgrid > .input-group {
+        grid-column: 2 / 3;
+    }
+
+.formbuttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+    .formbuttons * {
+        margin-left: 0.5em;
+    }
+
+
+/**************************
+*** Header
+**************************/
+
+
+header {
+    align-self: stretch;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-shrink: 0;
+    border-bottom-width: 3px;
+    max-height: 30%;
+    margin-bottom: 0.5em;
+    font-size: 2.0vw;
+}
+
+    header .logo {
+        width: 3em;
+        height: 2em;
+    }
+
+        header .logo > img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+    header > nav {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    header nav ul {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    header nav li {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        list-style-type: none;
+    }
+
+        header nav li:nth-child(odd) a {
+            background-color: #ffffb0;
+        }
+
+        header nav li:nth-child(even) a {
+            background-color: #ffffe8;
+        }
+
+    header nav .linkbutton {
+        min-height: 2em;
+        min-width: 8em;
+        padding: 0 0.5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        text-decoration: none;
+        color: black;
+    }
+
+        header nav .linkbutton:hover {
+            font-weight: bold;
+            min-height: 1.9em;
+            min-width: 7.8em;
+            border-width: 0.1em;
+            color: black;
+        }
+
+        header nav .linkbutton:active {
+            position: relative;
+            left: 0.1em;
+            top: 0.1em;
+            color: black;
+        }
+
+        header nav .linkbutton a {
+            background-color: rgb(92, 218, 102);
+            height: 100%;
+        }
+
+/**************************
+*** Main
+**************************/
+
+main {
+    padding-top: 1em;
+    flex-shrink: 1;
+    overflow-y: auto;
+    padding-bottom: 0.5em;
+}
+
+/**************************
+*** Footer
+**************************/
+
+footer {
+    border-top-width: 3px;
+    padding-top: 1em;
+    flex-shrink: 0;
+    font-style: italic;
+    font-weight: bold;
+}
+
+/**************************
+*** Page specific
+**************************/
+
+/******************************/
+/***** TESTING 
+*/
+
+form {
+    border-style: solid;
+    border-width: 1px;
+}
+
+.red-box {
+    border-style: solid;
+    border-width: 1px;
+    border-block-color: red;
+}
+
+form {
+    max-width: 30em;
+}
+
+.formbuttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 5px;
+}
+
+    .formbuttons .btn {
+        margin: 5px;
+    }

@@ -1,0 +1,107 @@
+﻿@using MVC_8.Models.Home
+@model PeopleViewModel
+
+@{
+    ViewData["Title"] = "People";
+    PeopleViewModel m = Model;
+    List<Person> people = m.FilteredPeople();
+    string filterHeader = string.IsNullOrWhiteSpace(m.Filter) ?
+        "Set Filter" :
+        $"Change / Clear filter ({m.Filter})";
+
+    string listHeader = $"People List ({people.Count} / {m.People.Count} shown)";
+
+    string showAddPersonClasses = (Model.ShowAddPerson ? "display_block" : "display_hidden");
+    string showFilterClasses = (Model.ShowFilter ? "display_block" : "display_hidden");
+}
+<h1>People</h1>
+<hr />
+
+<div class="sectionButtons">
+    <button type="button" class="btn btn-info btn-h3" onclick="toggleVisible('f1','f2')">
+      <span class="glyphicon glyphicon-plus"></span> Add Person
+    </button>
+    <button type="button" class="btn btn-info btn-h3" onclick="toggleVisible('f2','f1')">
+      <span class="glyphicon  glyphicon-filter"></span> @filterHeader 
+    </button>
+</div>
+<hr />
+
+<!------------------>
+<!-- Add persons  -->
+<!------------------>
+
+<div id="f1" class=@showAddPersonClasses>
+    <form asp-controller="Home" asp-action="AddPerson" method="post">
+        <div class="formgrid">
+            <label asp-for="Name" class="NOT-control-label"></label>
+            <div class="input-group">
+                <input asp-for="Name" size="30" name="name" value=@m.Name/>
+                <span asp-validation-for="Name" class="text-danger" ></span>
+            </div>
+            <label asp-for="City" class="NOT-control-label"></label>
+            <div class="input-group">
+                <input asp-for="City" size="30" name="city" value=@m.City/>
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <label asp-for="Phone" class="NOT-control-label"></label>
+            <div class="input-group">
+                <input asp-for="Phone" size="30" name="phone" value=@m.Phone/>
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div></div>
+            <div class="formbuttons">
+                <input type="reset" class="btn btn-secondary" value="Reset">
+                <input type="submit" class="btn btn-primary" value="Submit">
+            </div>
+        </div>
+    </form>
+    <hr />
+</div>
+
+<!------------------>
+<!-- Search Form  -->
+<!------------------>
+<div id="f2" class=@showFilterClasses>
+    <form asp-controller="Home" asp-action="SetFilter" method="post">
+        <div class="formgrid">
+            <label>Filter</label>
+            <div class="input-group">
+                <input type="text" name="filter" size="30" value="@m.Filter"/>
+            </div>
+            <div></div>
+            <div class="formbuttons">
+                <input type="reset" class="btn btn-secondary" value="Reset">
+                <input type="submit" class="btn btn-primary" value="Submit">
+            </div>
+        </div>
+    </form>
+    <hr />
+</div>
+
+<!------------------>
+<!-- Result Table -->
+<!------------------>
+
+<div class="table">
+    <h3>@listHeader</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>City</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Person person in people) {
+                <tr>
+                    <td>@person.Name</td>
+                    <td>@person.City</td>
+                    <td>@person.Phone</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script src="/js/JavaScript.js"></script>
