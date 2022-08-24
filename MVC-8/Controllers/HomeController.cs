@@ -5,7 +5,8 @@ using MVC_8.Models.Home;
 namespace MVC_8.Controllers {
     public class HomeController : Controller {
         ControllerUtils Utils { get { return new(HttpContext); } }
-        const string SessionDataKey = "PeopleData";
+        const string SettingsKey = "SessionSettings";
+        const string DataKey = "SessionData";
 
         public IActionResult Index() {
             return View(GetSessionData());
@@ -45,12 +46,32 @@ namespace MVC_8.Controllers {
 
         // Helpers
 
+
+        public ActionResult API() {
+            return Json(new { message = "Chuck Norris died" });
+        }
+
+        public ActionResult ApiGetPeople() {
+            PeopleViewModel model = GetSessionData();
+            return Json(model.People);
+        }
+
+        // Helpers
+
         private PeopleViewModel GetSessionData() {
-            return Utils.GetSessionData<PeopleViewModel>(SessionDataKey) ?? new PeopleViewModel(5);
+            return Utils.GetSessionData<PeopleViewModel>(DataKey) ?? new PeopleViewModel(5);
         }
 
         private void SetSessionData(PeopleViewModel data) {
-            Utils.SetSessionData(SessionDataKey, data);
+            Utils.SetSessionData(DataKey, data);
+        }
+
+        private PeopleViewModel GetSessionSettings() {
+            return Utils.GetSessionData<PeopleViewModel>(SettingsKey) ?? new PeopleViewModel(5);
+        }
+
+        private void SetSessionSettings(PeopleViewModel data) {
+            Utils.SetSessionData(SettingsKey, data);
         }
     }
 }

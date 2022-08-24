@@ -21,6 +21,18 @@ app.MapControllerRoute(
 );
 
 app.MapControllerRoute(
+    name: "addPerson",
+    pattern: "api",
+    defaults: new { controller = "Home", action = "API" }
+);
+
+app.MapControllerRoute(
+    name: "addPerson",
+    pattern: "apiGetPeople",
+    defaults: new { controller = "Home", action = "ApiGetPeople" }
+);
+
+app.MapControllerRoute(
     name: "default",
     pattern: "",
     defaults: new { controller = "Home", action = "Index" }
