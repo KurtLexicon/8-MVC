@@ -2,52 +2,60 @@
 using System.ComponentModel.DataAnnotations;
 namespace MVC_8.Models.Home {
     public class CreatePersonViewModel {
-
-        [Display(Name="Name")]
         [Required]
-        [RegularExpression(@"^[\w\-\s']{1,40}$")]
+        public int Id { get; set; } = 0;
+
+        [Display(Name = "Name")]
+        [Required]
         public string Name { get; set; } = "";
 
         [Display(Name = "City")]
-        [RegularExpression(@"^[\w\-\s']{0,40}$")]
+        [Required]
         public string City { get; set; } = "";
 
+
+
         [Display(Name = "Phone Number")]
-        [RegularExpression(@"^\+?[\d\-\s\(\)]{4,20}$")]
+        // Format "+DD-DD DD DD", with "+" and "-" and blanks optional, minimum 3 digits aftr dash
+        [RegularExpression(@"^[\+]?(\d+\s*\-)?(?:\d[\s]*){3,}$", ErrorMessage = "Invalid phone number")]
         public string Phone { get; set; } = "";
 
+
+        public string Message { get; set; } = "";
+        public bool IsSuccess { get; set; } = true;
+
+
         public CreatePersonViewModel() {
+            Id = 0;
             Name = "";
             City = "";
             Phone = "";
         }
 
-        public CreatePersonViewModel(string name, string city, string phone) {
-            Name = SanitizeNameOrCity(name ?? "");
-            City = SanitizeNameOrCity(city ?? "");
-            Phone = SanitizePhone(phone ?? "");
+        public CreatePersonViewModel(Person person) {
+            Id = person.Id;
+            Name = person.Name;
+            City = person.City;
+            Phone = person.Phone;
         }
 
-        private string SanitizeNameOrCity(string str) {
-            // 1. Capitalize
-            // 2. Limit length to 30
-            return string.Join(" ",
-                str.Trim()
-                .Split(' ')
-                .Select(
-                    name =>
-                    name[..0].ToUpper() + name[1..30].ToLower()
-                 )
-            );
+        public CreatePersonViewModel(Person person, ResponseData responseData) {
+            Id = person.Id;
+            Name = person.Name;
+            City = person.City;
+            Phone = person.Phone;
+            IsSuccess = responseData.IsSuccess;
+            Message = responseData.Message;
         }
 
-        private string SanitizePhone(string str) {
-            // 1. Remove letters commonly written in phone numbers, but not actually part of it
-            // 2. Check that the reminder consist of an optional "+" followed by 4-15 digits
-            str = Regex.Replace(str, @"[\-\s\(\)]+", "");
-            Regex rx = new (@"^\+?\d{4,15}$");
-            if (!rx.IsMatch(str)) throw new Exception("Invalid phone number");
-            return str;
+        public void AddFail(string str) {
+            IsSuccess = false;
+            Message = str;
+        }
+
+        public void AddSuccess(string str) {
+            IsSuccess = true;
+            Message = str;
         }
     }
 }

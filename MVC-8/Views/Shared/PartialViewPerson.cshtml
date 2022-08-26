@@ -1,0 +1,52 @@
+﻿@using MVC_8.Models.Home
+@model CreatePersonViewModel
+
+@{
+    string messageClass = Model.IsSuccess ?
+        "responseMessage successMessage" : 
+        "responseMessage failMessage";
+}
+
+<form id="personDetailForm" asp-controller="Home" asp-action="AddPerson" method="post">
+    @if(!string.IsNullOrWhiteSpace(Model.Message)) {
+        <div class="messageContainer">
+            <div class="@messageClass" onclick="removeResponseMessage()">
+                @Model.Message
+            </div>
+        </div>
+    }
+    <div class="formgrid">
+        <div class="formbuttons"> 
+            <input id="btnClose" value="Close" type="button" onclick="closePersonView()" class="btn btn-secondary formbtn">
+            <input id="btnEdit" value="Edit" type="button" onclick="editPerson()" class="btn btn-secondary formbtn">
+            <input id="btnNew" value="New" type="button" onclick="personDetails()" class="btn btn-primary formbtn">
+        </div>
+        <label asp-for="Id" class="NOT-control-label"></label>
+        <div class="input-group">
+            <input readonly type="text" asp-for="Id" size="30" name="id" value=@Model.Id/>
+        </div>
+
+        <label asp-for="Name" class="NOT-control-label"></label>
+        <div class="input-group">
+            <input asp-for="Name" size="30" name="name" value=@Model.Name autocomplete="off" onkeydown="onEnterSave(event)" />
+            <span asp-validation-for="Name" class="text-danger" ></span>
+        </div>
+
+        <label asp-for="City" class="NOT-control-label"></label>
+        <div class="input-group">
+            <input asp-for="City" size="30" name="city" value=@Model.City onkeydown="onEnterSave(event)"/>
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+
+        <label asp-for="Phone" class="NOT-control-label"></label>
+        <div class="input-group">
+            <input asp-for="Phone" size="30" name="phone" value=@Model.Phone autocomplete="off" onkeydown="onEnterSave(event)"/>
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+        <div></div>
+        <div class="formbuttons"> 
+            <input id="btnReset" value="Reset" type="reset" class="btn btn-secondary">
+            <input id="btnSave" value="Save" type="button" onclick="addOrUpdatePerson()" class="btn btn-primary">
+        </div>
+    </div>
+</form>

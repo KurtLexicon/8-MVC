@@ -1,17 +1,9 @@
 ﻿
-#f2 {
-    display: "none"
-}
+/**************************
+*** Page
+**************************/
 
-#f1 {
-    display: "none"
-}
 
-.btn-h3 {
-    font-size: large;
-}
-
-/*** Page ***/
 html {
     height: 100%;
     display: flex;
@@ -33,6 +25,8 @@ body {
 *** General
 **************************/
 
+/* All elements */
+
 * {
     margin: 0;
     padding: 0;
@@ -51,70 +45,30 @@ h1 {
     padding-bottom: 0.5em;
 }
 
-/* Buttons */
+/* Readonly text-inputs */
 
-.button {
-    height: 2em;
-    min-width: 6em;
-    padding: 0;
-    box-shadow: 0.2em 0.2em 0.1em rgb(128, 128, 128);
-    border-width: 2px;
-    border-radius: 0.5em;
+input[type=text]:read-only {
+    background-color: lightgray;
 }
 
-    .button:hover {
-        border-width: 3px;
-        box-shadow: 0.24em 0.24em 0.11em rgb(128, 128, 128);
-        font-weight: bold;
-    }
+/* Forms */
 
-    .button:active {
-        position: relative;
-        left: 0.1em;
-        top: 0.1em;
-        box-shadow: 0.1em 0.1em 0.05em rgb(128, 128, 128);
-    }
-
-    .button.reset {
-        background-color: lightsalmon;
-    }
-
-        .button.reset:hover {
-            background-color: rgb(255, 120, 100);
-        }
-
-    .button.submit {
-        background-color: lightgreen;
-    }
-
-        .button.submit:hover {
-            background-color: rgb(132, 251, 132);
-        }
-
-.display_hidden {
-    display: none;
-}
-.display_block {
-    display: block;
-}
-/** sectionButtons */
-.sectionButtons {
-    display: flex;
-    justify-content: flex-start;
-}
-/** Forms **/
 form {
-    font-size: 120%;
+    border-style: solid;
+    border-width: 1px;
     border-radius: 1em;
     border-width: 3px;
     padding: 0.5em;
+    margin-top: 1em;
+    max-width: 30em;
+    font-size: 120%;
+
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin-top: 1em;
 }
 
-    form > * {
+    #personDetailForm > * {
         margin-top: 0;
     }
 
@@ -136,20 +90,30 @@ form {
     }
 
 .formbuttons {
+    grid-column: 2 / 3;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    padding: 5px;
 }
 
-    .formbuttons * {
+    .formbuttons .btn {
         margin-left: 0.5em;
     }
 
+/* General error messages */
+s
+.errorMessage {
+    font-size: x-large;
+    background-color: red;
+    border-width: 3px;
+    border-radius: 0.5em;
+    padding: 0.3em;
+}
 
 /**************************
-*** Header
+*** Page Header
 **************************/
-
 
 header {
     align-self: stretch;
@@ -237,7 +201,7 @@ header {
         }
 
 /**************************
-*** Main
+*** Page Main
 **************************/
 
 main {
@@ -247,8 +211,9 @@ main {
     padding-bottom: 0.5em;
 }
 
+
 /**************************
-*** Footer
+*** Page Footer
 **************************/
 
 footer {
@@ -263,32 +228,80 @@ footer {
 *** Page specific
 **************************/
 
-/******************************/
-/***** TESTING 
-*/
+/** Person Details - Messages **/
 
-form {
-    border-style: solid;
-    border-width: 1px;
+.messageContainer {
+    position: relative;
+    top: -0.4em;
+    left: -0.4em;
+    overflow: visible;
 }
 
-.red-box {
-    border-style: solid;
-    border-width: 1px;
-    border-block-color: red;
+@keyframes fadeaway {
+    from { opacity: 0.8; visibility:visible;}
+    to { opacity: 0.0; visibility:hidden;}
 }
 
-form {
-    max-width: 30em;
+.responseMessage {
+    position: absolute;
+    top: 0.2em;
+    left: 0.2em;
+    float: left;
+    border-width: 2px;
+    border-radius: 1em;
+    padding: 0 2em;
+    animation-name: fadeaway;
+    animation-duration: 6s;
+    opacity: 0.0;
+    visibility: hidden;
+    z-index: 100;
+    font-weight: bold;
+    font-size: 105%;
 }
 
-.formbuttons {
+.successMessage {
+    background-color: lawngreen;
+}
+
+.failMessage {
+    background-color: orangered;
+}
+
+/** People List - Header **/
+
+.peopleHeader {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
-    padding: 5px;
+    justify-content: flex-start;
 }
-
-    .formbuttons .btn {
-        margin: 5px;
+    .peopleHeader input[type=text] {
+        text-transform: uppercase;
+        font-size: large;
     }
+    .peopleHeader * {
+        margin-left: 0.5em;
+    }
+
+    .peopleHeader .peopleHeaderLast {
+        margin-left: auto;
+        justify-self: flex-end;
+    }
+
+    .peopleHeader .sectionButtons {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .peopleHeader .btn-h3 {
+        /**/
+    }
+
+/** People Header-row **/
+
+.header-row {
+    top: -1.4em;
+    background-color: #80B0FF;
+    position: sticky;
+    padding-top: 0;
+    margin-top:0;
+}
