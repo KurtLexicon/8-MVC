@@ -6,13 +6,14 @@
             return (new int[n]).Select(i => GetRandomPerson()).ToList();
         }
 
-        static public Person GetRandomPerson() {
+        static public Person GetRandomPerson(int id = 0) {
             string fName = FirstNames[rnd.Next(FirstNames.Count)];
             string lName = LastNames[rnd.Next(LastNames.Count)];
             string name = $"{fName} {lName}";
             string city = Cities[rnd.Next(Cities.Count)];
             string phone = $"{rnd.Next(100000, 999999)}";
-            return new(name, city, phone);
+            Person person = new(name, city, phone, id);
+            return person;
         }
 
         private static readonly List<string> LastNames = new() {

@@ -4,10 +4,10 @@
         public int NAllPeople { get; set; }
         public string Filter { get; set; }
 
-        public PeopleListViewModel(PeopleData peopleData, string filter) {
-            NAllPeople = peopleData.People.Count;
+        public PeopleListViewModel(List<Person> people, int nPeople, string filter) {
+            NAllPeople = nPeople;
             Filter = filter;
-            People = peopleData.FilteredPeople(filter);
+            People = people;
         }
     }
 }

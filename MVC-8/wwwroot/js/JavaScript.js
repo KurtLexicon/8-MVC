@@ -37,7 +37,7 @@ async function PostJson(url, data) {
                 `Error calling ${url}: ${errText}` :
                 `Error calling ${url}: ${response.status} ${response.statusText}`);
         } else {
-            return errorHandler(`Call to ${url}: ${response.status} ${response.statusText}`);
+            return errorHandler(`Error calling ${url}: ${response.status} ${response.statusText}`);
         }
     } catch {
         return errorHandler(`Call to ${url}: Network failure`);
@@ -89,7 +89,7 @@ async function onEnterSave(event) {
 
 async function personDetails(elemWithIdValue) {
     var id = elemWithIdValue ? elemWithIdValue.value : 0;
-    var text = await PostJson('/PersonDetails', { Id: id });
+    var text = await PostJson('/GetPerson', id);
 
     var elemDetailsBox = document.getElementById('detailsBox');
     elemDetailsBox.innerHTML = text;
@@ -137,14 +137,14 @@ async function removePerson(elemWithIdValue) {
     selectFilter()
 }
 
-/* === Handle People List === */
+/* === Fill People List === */
 
 
 async function getPeople() {
     var elemFilter = document.getElementById('inputFilter');
     let filter = elemFilter ? elemFilter.value : '';
 
-    var text = await PostJson('/SetFilterGetPeopleList', { filter });
+    var text = await PostJson('/GetPeople', filter);
 
     var elemPeopleList = document.getElementById('peopleList');
     elemPeopleList.innerHTML = text;
@@ -158,12 +158,12 @@ async function getPeople() {
 
 async function testUrlError() {
     var text = await PostJson('/SomethingStupid', {});
-    var elemDetailsBox = document.getElementById('detailsBox');
-    elemDetailsBox.innerHTML = text;
+    var elemPeopleList = document.getElementById('peopleList');
+    elemPeopleList.innerHTML = text;
 }
 
 async function testErrorCode() {
-    var text = await PostJson('/TestErrorCode', {});
+    var text = await PostJson('/GetCoffee', {});
     var elemDetailsBox = document.getElementById('detailsBox');
     elemDetailsBox.innerHTML = text;
 }

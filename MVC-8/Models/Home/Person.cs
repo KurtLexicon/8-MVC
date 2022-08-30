@@ -3,17 +3,10 @@
 
 namespace MVC_8.Models.Home {
     public class Person {
-        public int Id { get; private set; }
+        public int Id { get; set; }
         public string Name { get; set; } = "";
         public string City { get; set; } = "";
         public string Phone { get; set; } = "";
-
-        public int SetId () {
-            if(Id == 0) {
-                Id = PeopleData.GetNextId();
-            }
-            return Id;
-        }
 
         public Person() {
             Id = 0;
@@ -22,15 +15,14 @@ namespace MVC_8.Models.Home {
             Phone = "";
         }
 
-        public Person(string name, string city, string phone) {
-            Id = PeopleData.GetNextId();
+        public Person(string name, string city, string phone, int id = 0) {
             Name = name;
             City = city;
             Phone = phone;
+            Id = id;    
         }
 
         public Person(CreatePersonViewModel input) {
-            Id = PeopleData.GetNextId();
             if (input != null) {
                 Name = input.Name;
                 City = input.City;
@@ -40,6 +32,13 @@ namespace MVC_8.Models.Home {
                 City = "";
                 Phone = "";
             }
+        }
+
+        public Person UpdateFromInput(CreatePersonViewModel input) {
+            City = input.City;
+            Name = input.Name;
+            Phone = input.Phone;
+            return this;
         }
     }
 }

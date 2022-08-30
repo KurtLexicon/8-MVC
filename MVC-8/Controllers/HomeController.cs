@@ -1,13 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MVC_8.Data;
 using MVC_8.Models;
 using MVC_8.Models.Home;
 
 namespace MVC_8.Controllers {
     public class HomeController : Controller {
+        private DataStore DataStore { get; set; }
+
+        public HomeController(ApplicationDbContext dbContext) : base() {
+            DataStore = new(dbContext);
+        }
 
         // =======================================
         // Main Pages
         // =======================================
+
 
         public IActionResult Index() {
             return View("PeoplePage");
@@ -17,26 +25,19 @@ namespace MVC_8.Controllers {
             return View("AboutPage");
         }
 
-        public IActionResult TestErrorCode() {
+        public IActionResult GetCoffee() {
             return StatusCode(418);
         }
 
-
         // =======================================
-        // Manage filter and people list
+        // Get People
         // =======================================
-        public class FilterParams {
-            public FilterParams() {
-                Filter = "";
-            }
-            public string Filter { get; set; }
-        }
 
         [HttpPost]
-        public ActionResult SetFilterGetPeopleList([FromBody] FilterParams p) {
-            PeopleData people = DataStore.PeopleData;
-
-            PeopleListViewModel model = new(people, p.Filter);
+        public ActionResult GetPeople([FromBody] string filter) {
+            int nPeople = DataStore.GetNumberOfPeople();
+            List<Person> people = DataStore.GetPeopleFiltered(filter);
+            PeopleListViewModel model = new(people, nPeople, filter);
             return View("PartialViewPeopleList", model);
         }
 
@@ -46,17 +47,8 @@ namespace MVC_8.Controllers {
 
         // === Get Person
 
-        public class ShowPersonParams {
-            public ShowPersonParams() {
-                Id = 0;
-            }
-            public int Id { get; set; }
-        }
-
         [HttpPost]
-        public IActionResult ShowPerson([FromBody] ShowPersonParams p) {
-            int id = p.Id;
-            PeopleData people = DataStore.PeopleData;
+        public IActionResult GetPerson([FromBody] int id) {
             ResponseData responseData = new();
 
             Person person;
@@ -64,9 +56,9 @@ namespace MVC_8.Controllers {
                 person = new();
             } else {
                 try {
-                    person = people.GetPersonById(id);
+                    person = DataStore.GetPersonById(id);
                 }
-                catch (PeopleData.PersonIdNotFoundException) {
+                catch (DataStore.PersonNotFoundException) {
                     person = new();
                     responseData.SetFail($"Person {id} not found");
                 }
@@ -80,9 +72,7 @@ namespace MVC_8.Controllers {
 
         [HttpPost]
         public IActionResult AddRandomPerson() {
-            PeopleData people = DataStore.PeopleData;
-            Person person = RandomData.GetRandomPerson();
-            people.AddPerson(person);
+            Person person = DataStore.AddPerson(RandomData.GetRandomPerson());
             CreatePersonViewModel model = new(person);
             model.AddSuccess($"Random person {person.Id} Added");
             return View("PartialViewPerson", model);
@@ -92,23 +82,20 @@ namespace MVC_8.Controllers {
 
         [HttpPost]
         public IActionResult AddOrUpdatePerson([FromBody] CreatePersonViewModel input) {
-            PeopleData people = DataStore.PeopleData;
-
-            Person person;
             CreatePersonViewModel model;
 
-            if (ModelState.IsValid && input.Id == 0) { 
-                person = people.AddPerson(new Person(input));
+            if (ModelState.IsValid && input.Id == 0) {
+                Person person = DataStore.AddPerson(new Person(input));
                 model = new(person);
                 model.AddSuccess($"Person {person.Id} added");
 
             } else if (ModelState.IsValid && input.Id != 0) {
                 try {
-                    person = people.UpdatePerson(input);
+                    Person person = DataStore.UpdatePerson(input);
                     model = new(person);
                     model.AddSuccess($"Person {person.Id} updated");
                 }
-                catch (PeopleData.PersonIdNotFoundException) {
+                catch (DataStore.PersonNotFoundException) {
                     model = input;
                     model.AddFail($"Person {input.Id} not found");
                 }
@@ -136,16 +123,17 @@ namespace MVC_8.Controllers {
         public IActionResult DeletePersonGetPeopleList([FromBody] ReqBodyDelete req) {
             int id = req.Id;
             string filter = req.Filter;
-            PeopleData people = DataStore.PeopleData;
 
             try {
-                people.DeletePerson(id);
+                DataStore.DeletePerson(id);
             }
-            catch (PeopleData.PersonIdNotFoundException){
+            catch (DataStore.PersonNotFoundException) {
                 // Person to delete not found, maybe deleted already, just let it pass
             }
 
-            PeopleListViewModel model = new(people, filter);
+            int nPeople = DataStore.GetNumberOfPeople();
+            List<Person> people = DataStore.GetPeopleFiltered(filter);
+            PeopleListViewModel model = new(people, nPeople, filter);
             return View("PartialViewPeopleList", model);
         }
     }

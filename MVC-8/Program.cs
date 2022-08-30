@@ -1,7 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using MVC_8.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSession();
 builder.Services.AddMvc();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options => {
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
 var app = builder.Build();
 app.UseSession();
 
@@ -21,22 +29,21 @@ app.MapControllerRoute(
 );
 
 app.MapControllerRoute(
-    name: "TestErrorCode",
-    pattern: "TestErrorCode",
-    defaults: new { controller = "Home", action = "TestErrorCode" }
+    name: "GetCoffee",
+    pattern: "GetCoffee",
+    defaults: new { controller = "Home", action = "GetCoffee" }
 );
 
 app.MapControllerRoute(
-    name: "setFilterGetPeopleList",
-    pattern: "SetFilterGetPeopleList",
-    defaults: new { controller = "Home", action = "SetFilterGetPeopleList" }
+    name: "GetPeople",
+    pattern: "GetPeople",
+    defaults: new { controller = "Home", action = "GetPeople" }
 );
 
-
 app.MapControllerRoute(
-    name: "PersonDetails",
-    pattern: "PersonDetails",
-    defaults: new { controller = "Home", action = "ShowPerson" }
+    name: "GetPerson",
+    pattern: "GetPerson",
+    defaults: new { controller = "Home", action = "GetPerson" }
 );
 
 app.MapControllerRoute(
