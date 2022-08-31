@@ -37,7 +37,11 @@ body {
         border-width: 0px;
     }
 
+.flexHorizontal {
+    display:flex;
+    flex-direction: row;
 
+}
 
 /* Headers */
 
@@ -238,7 +242,7 @@ footer {
 }
 
 @keyframes fadeaway {
-    from { opacity: 0.8; visibility:visible;}
+    from { opacity: 1.0; visibility:visible;}
     to { opacity: 0.0; visibility:hidden;}
 }
 
@@ -251,7 +255,7 @@ footer {
     border-radius: 1em;
     padding: 0 2em;
     animation-name: fadeaway;
-    animation-duration: 6s;
+    animation-duration: 10s;
     opacity: 0.0;
     visibility: hidden;
     z-index: 100;
@@ -269,31 +273,27 @@ footer {
 
 /** People List - Header **/
 
-.peopleHeader {
+.itemListHeader {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
 }
-    .peopleHeader input[type=text] {
+    .itemListHeader input[type=text] {
         text-transform: uppercase;
         font-size: large;
     }
-    .peopleHeader * {
+    .itemListHeader * {
         margin-left: 0.5em;
     }
 
-    .peopleHeader .peopleHeaderLast {
+    .itemListHeader .peopleHeaderLast {
         margin-left: auto;
         justify-self: flex-end;
     }
 
-    .peopleHeader .sectionButtons {
+    .itemListHeader .sectionButtons {
         display: flex;
         justify-content: flex-start;
-    }
-
-    .peopleHeader .btn-h3 {
-        /**/
     }
 
 /** People Header-row **/

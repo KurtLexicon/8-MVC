@@ -1,0 +1,41 @@
+﻿@using MVC_8.Models.Home
+@model ItemInputViewModel
+
+@{
+    ItemInputViewModel m = Model;
+    string messageClass = Model.IsSuccess() ?
+        "responseMessage successMessage" :
+        "responseMessage failMessage";
+    if (string.IsNullOrWhiteSpace(m.GetEntityCode())) {
+        throw new Exception("amenvafan");
+    }
+}
+
+<form id="itemDetailForm" asp-controller="Home" asp-action="AddOrUpdateItem" method="post">
+    @if (!string.IsNullOrWhiteSpace(Model.Message())) {
+        <div class="messageContainer">
+            <div class="@messageClass" onclick="removeResponseMessage()">
+                @Model.Message()
+            </div>
+        </div>
+    }
+    <div class="formgrid">
+        <div class="formbuttons">
+            <input id="btnClose" value="Close" type="button" onclick="closeInputBox()" class="btn btn-secondary formbtn">
+            <input id="btnNew" value="New" type="button" onclick="getItem('@m.GetEntityCode()')" class="btn btn-primary formbtn">
+        </div>
+
+        <label asp-for="Id" class="NOT-control-label"></label>
+        <div class="input-group">
+            <input readonly type="text" asp-for="Id" size="30" name="id" value=@Model.Id />
+        </div>
+
+        <partial name=@Model.GetViewName() model=@Model />
+
+        <div></div>
+        <div class="formbuttons">
+            <input id="btnReset" value="Reset" type="reset" class="btn btn-secondary">
+            <input id="btnSave" value="Save" type="button" onclick="addOrUpdateItem('@m.GetEntityCode()')" class="btn btn-primary">
+        </div>
+    </div>
+</form>

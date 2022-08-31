@@ -1,0 +1,17 @@
+﻿@using MVC_8.Models.Home
+@model City.InputViewModel
+
+@{
+    SelectList CountrySelectList = Model.SelectCountries();
+}
+
+<label asp-for="Name" class="NOT-control-label"></label>
+<div class="input-group">
+    <input asp-for="Name" size="30" name="name" value=@Model.Name autocomplete="off" onkeydown="onEnterSaveItem(event, '@Model.GetEntityCode()')" />
+    <span asp-validation-for="Name" class="text-danger" ></span>
+</div>
+
+<label asp-for="CountryId" class="NOT-control-label"></label>
+<div class="input-group">
+    <select asp-for="CountryId" name="CountryId" value=@Model.CountryId class="form-control" asp-items="@CountrySelectList" onkeydown="onEnterSaveItem(event, '@Model.GetEntityCode()')"></select>
+</div>

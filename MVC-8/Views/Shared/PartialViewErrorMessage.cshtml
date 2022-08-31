@@ -1,0 +1,14 @@
+﻿@using MVC_8.Models.Home
+@model ResponseData
+
+@{
+    Layout = null;
+
+    ResponseData m = Model;
+    string message = m != null ? m.Message : "Serious Error";
+    string messageClass = m != null && m.IsSuccess ?
+        "responseMessage successMessage" : 
+        "responseMessage failMessage";
+}
+
+<div class="@messageClass">@message</div>

@@ -29,39 +29,32 @@ app.MapControllerRoute(
 );
 
 app.MapControllerRoute(
+    name: "People",
+    pattern: "People",
+    defaults: new { controller = "Home", action = "People" }
+);
+
+app.MapControllerRoute(
+    name: "Countries",
+    pattern: "Countries",
+    defaults: new { controller = "Home", action = "Countries" }
+);
+
+app.MapControllerRoute(
+    name: "Cities",
+    pattern: "Cities",
+    defaults: new { controller = "Home", action = "Cities" }
+);
+
+app.MapControllerRoute(
     name: "GetCoffee",
     pattern: "GetCoffee",
     defaults: new { controller = "Home", action = "GetCoffee" }
 );
 
 app.MapControllerRoute(
-    name: "GetPeople",
-    pattern: "GetPeople",
-    defaults: new { controller = "Home", action = "GetPeople" }
-);
-
-app.MapControllerRoute(
-    name: "GetPerson",
-    pattern: "GetPerson",
-    defaults: new { controller = "Home", action = "GetPerson" }
-);
-
-app.MapControllerRoute(
-    name: "AddRandomPerson",
-    pattern: "AddRandomPerson",
-    defaults: new { controller = "Home", action = "AddRandomPerson" }
-);
-
-app.MapControllerRoute(
-    name: "AddOrUpdatePerson",
-    pattern: "AddOrUpdatePerson",
-    defaults: new { controller = "Home", action = "AddOrUpdatePerson" }
-);
-
-app.MapControllerRoute(
-    name: "DeletePerson",
-    pattern: "DeletePerson",
-    defaults: new { controller = "Home", action = "DeletePersonGetPeopleList" }
+    name: "ItemActions",
+    pattern: "{controller}/{action}"
 );
 
 app.Run();

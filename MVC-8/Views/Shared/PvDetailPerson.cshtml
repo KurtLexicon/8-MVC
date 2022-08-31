@@ -1,0 +1,25 @@
+﻿@using MVC_8.Models.Home
+@model Person.InputViewModel
+
+@{
+    SelectList SelectCities = Model.SelectCities();
+}
+
+
+<label asp-for="Name" class="NOT-control-label"></label>
+<div class="input-group">
+    <input asp-for="Name" size="30" name="name" value=@Model.Name autocomplete="off" onkeydown="onEnterSaveItem(event, '@Model.GetEntityCode()')" />
+    <span asp-validation-for="Name" class="text-danger" ></span>
+</div>
+
+<label asp-for="Phone" class="NOT-control-label"></label>
+<div class="input-group">
+    <input asp-for="Phone" size="30" name="phone" value=@Model.Phone autocomplete="off" onkeydown="onEnterSaveItem(event, '@Model.GetEntityCode()')" />
+    <span asp-validation-for="Phone" class="text-danger"></span>
+</div>
+
+<label asp-for="CityId" class="NOT-control-label"></label>
+<div class="input-group">
+    <select asp-for="CityId" name="CityId" value=@Model.CityId class="form-control" asp-items="@SelectCities" onkeydown="onEnterSaveItem(event, '@Model.GetEntityCode()')"></select>
+    <span asp-validation-for="CityId" class="text-danger"></span>
+</div>

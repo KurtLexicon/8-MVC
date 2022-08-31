@@ -1,0 +1,12 @@
+﻿@using MVC_8.Models.Home
+@model Country.InputViewModel
+
+@{
+}
+
+<label asp-for="Name" class="NOT-control-label"></label>
+<div class="input-group">
+    <input  type="text" asp-for="Name" size="30" name="name" value=@Model.Name autocomplete="off" onkeydown="onEnterSaveItem(event, '@Model.GetEntityCode()')" />
+    <span asp-validation-for="Name" class="text-danger" ></span>
+</div><label asp-for="Name" class="NOT-control-label"></label>
+

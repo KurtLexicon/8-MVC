@@ -1,5 +1,5 @@
 ﻿
-/* === Post JSON Return HTML section - Helper === */
+/* === Post JSON Return HTML-section === */
 
 function errorHandler(text) {
     function escape(htmlStr) {
@@ -9,7 +9,6 @@ function errorHandler(text) {
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;');
-
     }
     console.log(text);
     return `<div class="errorMessage">${escape(text)}</div>`;
@@ -17,7 +16,12 @@ function errorHandler(text) {
 
 async function PostJson(url, data) {
     try {
-        var options = {
+        if (url.startsWith('//')) {
+            // This happens if EntityCode is missing for some reason
+            throw 'Url starts with //';
+        }
+
+        const options = {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(data),
@@ -26,7 +30,7 @@ async function PostJson(url, data) {
                 'Content-type': 'application/json'
             }
         };
-
+        console.log(`Calling ${url}`);
         let response = await fetch(url, options);
 
         if (response.ok) {
@@ -47,15 +51,15 @@ async function PostJson(url, data) {
 /* === Misc DOM === */
 
 function selectName() {
-    var elem = document.getElementById('Name');
+    const elem = document.getElementById('Name');
     elem && elem.focus();
-    elem.select();
+    elem && elem.select();
 }
 
 function selectFilter() {
-    var elem = document.getElementById('inputFilter');
+    const elem = document.getElementById('inputFilter');
     elem && elem.focus();
-    elem.select();
+    elem && elem.select();
 }
 
 function removeResponseMessage() {
@@ -65,112 +69,114 @@ function removeResponseMessage() {
     }
 }
 
-function closePersonView() {
-    var elemDetailsBox = document.getElementById('detailsBox');
-    elemDetailsBox.innerHTML = '';
+function closeInputBox() {
+    const elemDetailsBox = document.getElementById('detailsBox');
+    elemDetailsBox && (elemDetailsBox.innerHTML = '');
     selectFilter();
 }
 
-async function onEnterGetPeople(event) {
+
+async function onEnterGetItems(event, EntityCode) {
     if (event.key === "Enter") {
-        getPeople();
+        getItemsList(EntityCode);
     }
 }
 
-async function onEnterSave(event) {
+async function onEnterSaveItem(event, EntityCode) {
     if (event.key === "Enter") {
-        addOrUpdatePerson();
+        addOrUpdateItem(EntityCode);
     }
 }
 
-/* === Handle Persons and Details === */
+/* === Handle Items === */
 
-/* --- Show Details Box --- */
+async function getItemsList(EntityCode) {
 
-async function personDetails(elemWithIdValue) {
-    var id = elemWithIdValue ? elemWithIdValue.value : 0;
-    var text = await PostJson('/GetPerson', id);
+    const elemFilter = document.getElementById('inputFilter');
+    const filter = elemFilter ? elemFilter.value : '';
 
-    var elemDetailsBox = document.getElementById('detailsBox');
-    elemDetailsBox.innerHTML = text;
-    selectName();
-}
+    const text = await PostJson(`/${EntityCode}/GetItems`, filter);
 
-/* --- Add random person --- */
+    const elemItemsList = document.getElementById('itemsList');
+    elemItemsList && (elemItemsList.innerHTML = text);
 
-async function addRandomPerson() {
-    var text = await PostJson('/AddRandomPerson', {});
-
-    var elemDetailsBox = document.getElementById('detailsBox');
-    elemDetailsBox.innerHTML = text;
-    getPeople();
-}
-
-/* --- Add or update person --- */
-
-async function addOrUpdatePerson() {
-    var inputs = document.querySelectorAll('#personDetailForm input[type="text"]');
-    var formData = {};
-    for (var i = 0; i < inputs.length; i++) {
-        formData[inputs[i].name] = inputs[i].value;
-    }
-
-    var text = await PostJson('/AddOrUpdatePerson', formData);
-
-    var elemDetailsBox = document.getElementById('detailsBox');
-    elemDetailsBox.innerHTML = text;
-
-    await getPeople();
-    selectName();
-}
-
-/* --- Delete person --- */
-
-async function removePerson(elemWithIdValue) {
-    var id = elemWithIdValue.value;
-    var elemFilter = document.getElementById('inputFilter');
-    let filter = elemFilter ? elemFilter.value : '';
-
-    var text = await PostJson('/DeletePerson', { id, filter });
-    var elemPeopleList = document.getElementById('peopleList');
-    elemPeopleList.innerHTML = text;
     selectFilter()
 }
 
-/* === Fill People List === */
+async function getItem(EntityCode, id) {
 
+    const text = await PostJson(`/${EntityCode}/getItem`, id);
 
-async function getPeople() {
-    var elemFilter = document.getElementById('inputFilter');
-    let filter = elemFilter ? elemFilter.value : '';
+    const elemDetailsBox = document.getElementById('detailsBox');
+    elemDetailsBox && (elemDetailsBox.innerHTML = text);
 
-    var text = await PostJson('/GetPeople', filter);
-
-    var elemPeopleList = document.getElementById('peopleList');
-    elemPeopleList.innerHTML = text;
-
-    var newFilterElement = document.getElementById('inputFilter');
-    newFilterElement && newFilterElement.focus();
+    selectName();
 }
 
+async function removeItem(EntityCode, id) {
+    const elemFilter = document.getElementById('inputFilter');
+    const filter = elemFilter ? elemFilter.value : '';
+
+    const text = await PostJson(`/${EntityCode}/DeleteItem`, { id, filter });
+
+    const elemItemsList = document.getElementById('itemsList');
+    elemItemsList && (elemItemsList.innerHTML = text);
+
+    selectFilter()
+}
+
+
+async function addOrUpdateItem(EntityCode) {
+    const formData = {};
+    const inputs = document.querySelectorAll('#itemDetailForm input[type="text"]');
+    for (let i = 0; i < inputs.length; i++) {
+        formData[inputs[i].name] = inputs[i].value;
+    }
+    const selects = document.querySelectorAll('#itemDetailForm select');
+    for (let i = 0; i < selects.length; i++) {
+        formData[selects[i].name] = selects[i].value;
+    }
+
+    const text = await PostJson(`/${EntityCode}/AddOrUpdateItem`, formData);
+
+    const elemDetailsBox = document.getElementById('detailsBox');
+    elemDetailsBox && (elemDetailsBox.innerHTML = text);
+
+    await getItemsList(EntityCode);
+
+    selectName();
+}
+
+async function addRandomItem(EntityCode) {
+    const text = await PostJson(`/${EntityCode}/AddRandomItem`, {});
+
+    const elemDetailsBox = document.getElementById('detailsBox');
+    elemDetailsBox && (elemDetailsBox.innerHTML = text);
+    await getItemsList(EntityCode);
+}
 
 /* === Some test functions === */
 
 async function testUrlError() {
-    var text = await PostJson('/SomethingStupid', {});
-    var elemPeopleList = document.getElementById('peopleList');
-    elemPeopleList.innerHTML = text;
+    const text = await PostJson('/SomethingStupid', {});
+    const elemItemsList = document.getElementById('itemsList');
+    elemItemsList && (elemItemsList.innerHTML = text);
 }
 
 async function testErrorCode() {
-    var text = await PostJson('/GetCoffee', {});
-    var elemDetailsBox = document.getElementById('detailsBox');
-    elemDetailsBox.innerHTML = text;
+    const text = await PostJson('/GetCoffee', {});
+    const elemDetailsBox = document.getElementById('detailsBox');
+    elemDetailsBox && (elemDetailsBox.innerHTML = text);
 }
 
-/* === When window loaded get people === */
+/* === When window loaded fill items list === */
+
+function initialLoad() {
+    const elemEntityCode = document.getElementById('EntityCode');
+    const EntityCode = elemEntityCode && elemEntityCode.getAttribute('data-item-code');
+    EntityCode && getItemsList(EntityCode);
+}
 
 window.addEventListener('load', () => {
-    getPeople();
+    initialLoad();
 });
-

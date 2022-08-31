@@ -1,7 +1,17 @@
-﻿@{
+﻿@using MVC_8.Models.Home
+@model PageViewModel
+@{
     Layout = "_Layout";
-    ViewData["Title"] = "8 - People";
+    ViewData["Title"] = $"9.2 - {Model.Title}";
 }
+
+<!------------------>
+<!-- Item Code  -->
+<!------------------>
+
+<div id="EntityCode" hidden data-item-code="@Model.EntityCode"></div>
+<h2>@Model.EntityCode</h2>
+<hr />
 
 <!------------------>
 <!-- Details Box  -->
@@ -15,7 +25,7 @@
 <!-- Result Table -->
 <!------------------>
 
-<div id="peopleList"></div>
+<div id="itemsList"></div>
 
 <!------------------ -->
 <!-- And a script... -->

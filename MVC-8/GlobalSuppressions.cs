@@ -4,6 +4,3 @@
 // a specific target and scoped to a namespace, type, member, etc.
 
 using System.Diagnostics.CodeAnalysis;
-
-[assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>", Scope = "member", Target = "~M:MVC_8.Models.Home.CreatePersonViewModel.SanitizeNameOrCity(System.String)~System.String")]
-[assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>", Scope = "member", Target = "~M:MVC_8.Models.Home.CreatePersonViewModel.SanitizePhone(System.String)~System.String")]
