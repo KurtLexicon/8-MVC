@@ -47,6 +47,12 @@ app.MapControllerRoute(
 );
 
 app.MapControllerRoute(
+    name: "Languages",
+    pattern: "Languages",
+    defaults: new { controller = "Home", action = "Languages" }
+);
+
+app.MapControllerRoute(
     name: "GetCoffee",
     pattern: "GetCoffee",
     defaults: new { controller = "Home", action = "GetCoffee" }

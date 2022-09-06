@@ -1,9 +1,7 @@
 ﻿namespace MVC_8.Models.Home {
-    public class City : EntityItem {
+    public class Language : EntityItem {
         override public int Id { get; set; } = 0;
         override public string Name { get; set; } = "";
-        public int CountryId { get; set; }
-        public Country Country { get; set; } = null!;
         public List<Person> People { get; set; } = new();
     }
 }

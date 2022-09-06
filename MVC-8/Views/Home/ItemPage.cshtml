@@ -1,16 +1,16 @@
-﻿@using MVC_8.Models.Home
+﻿@using MVC_8.Models.ViewModels
 @model PageViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = $"9.2 - {Model.Title}";
+    ViewData["Title"] = $"9.2 - {Model.Entity.Names}";
 }
 
 <!------------------>
 <!-- Item Code  -->
 <!------------------>
 
-<div id="EntityCode" hidden data-item-code="@Model.EntityCode"></div>
-<h2>@Model.EntityCode</h2>
+<div id="EntityCode" hidden data-item-code="@Model.Entity.Code"></div>
+<h2>@Model.Entity.Names</h2>
 <hr />
 
 <!------------------>

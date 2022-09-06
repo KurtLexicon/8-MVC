@@ -232,8 +232,55 @@ footer {
 *** Page specific
 **************************/
 
-/** Person Details - Messages **/
+#btnEditLanguagesOpen {
+    margin-left: 0.5em;
+}
 
+.editLanguagesContainer {
+    position: relative;
+    top: -2em;
+    left: -1em;
+    overflow: visible;
+    background-color: lightgrey;
+}
+
+.editLanguages {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-end;
+    top: 0.2em;
+    left: 0.2em;
+    float: left;
+    border-width: 2px;
+    border-radius: 1em;
+    padding: 1em;
+    width: 10em;
+    z-index: 100;
+    font-weight: bold;
+    font-size: 105%;
+    background-color: lightgrey;
+}
+
+#btnEditLanguagesClose {
+    margin-top:0.5em;
+}
+.visibilityHidden {
+    visibility: hidden;
+}
+
+.editLanguages option {
+    background-color: lightyellow;
+    color: black;
+}
+
+.editLanguages option:checked {
+    background-color: blue;
+    color:yellow;
+}
+
+
+/** Person Details - Messages **/
 .messageContainer {
     position: relative;
     top: -0.4em;

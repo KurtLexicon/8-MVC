@@ -1,19 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MVC_8.Data;
+using MVC_8.Models;
 using MVC_8.Models.Home;
+using MVC_8.Models.ViewModels;
 
 namespace MVC_8.Controllers {
-    abstract public class ItemController<TItem, TViewModel, TInputViewModel> : Controller
+    abstract public class ItemController<
+            TItem,
+            TListViewModel,
+            TInputViewModel,
+            TDataStore> : Controller
         where TItem : EntityItem, new()
-        where TViewModel : ItemListViewModel
-        where TInputViewModel : ItemInputViewModel {
+        where TListViewModel : ListViewModel, new()
+        where TInputViewModel : DetailsViewModel
+        where TDataStore : DataStoreItem<TItem> {
 
-        protected DataStoreItem<TItem> Ds { get; set; }
+        protected ApplicationDbContext DbContext { get; set; } = null!;
+        protected DataStoreItem<TItem> Ds { get; set; } = null!;
+        protected EntityConst Entity { get; set; } = null!;
 
-        protected ItemController(ApplicationDbContext dbContext, DbSet<TItem> dbSet) : base() {
-            Ds = new(dbContext, dbSet);
-        }
+        protected ItemController() : base() { }
 
         // =======================================
         // Get Items
@@ -23,10 +29,10 @@ namespace MVC_8.Controllers {
         public ActionResult GetItems([FromBody] string filter) {
             try {
                 int nTotal = Ds.GetNumberOfItems();
-                List<TItem> items = Ds.GetItemsFiltered(filter);
-                List<EntityItem> entitytems = items.Select(i => (EntityItem)i).ToList();
-                ItemListViewModel model = new TItem().GetItemListViewModel(entitytems, nTotal, filter);
-                return View("PartialViewItemList", model);
+                List<EntityItem> items = Ds.GetItemsFiltered(filter);
+                TListViewModel model = new();
+                model.AddData(items, nTotal, filter);
+                return View("PartialViewList", model);
             }
             catch (Exception e) {
                 return HandleError(e);
@@ -51,11 +57,11 @@ namespace MVC_8.Controllers {
                     }
                     catch (DataStore.ItemNotFoundException) {
                         item = new();
-                        responseData.SetFail($"{item.GetEntityCode()} {id} not found");
+                        responseData.SetFail($"{Entity.Name} {id} not found");
                     }
                 }
 
-                ItemInputViewModel model = item.GetItemInputViewModel(Ds);
+                TInputViewModel model = CreateViewModel(item);
                 model.AddResponseData(responseData);
                 return View("PvDetail", model);
             }
@@ -70,7 +76,7 @@ namespace MVC_8.Controllers {
 
         [HttpPost]
         public IActionResult AddOrUpdateItem([FromBody] TInputViewModel input) {
-            ItemInputViewModel model;
+            TInputViewModel model;
             try {
                 if (!ModelState.IsValid) throw new DataStore.InfoException("Please enter valid data");
 
@@ -81,28 +87,30 @@ namespace MVC_8.Controllers {
                     EntityItem entityItem = input.GetItem(Ds);
                     if (entityItem is not TItem) throw new Exception("Program error: TInputViewModel.GetItem did not return TItem");
                     TItem item = Ds.AddItem((TItem)entityItem);
-                    model = item.GetItemInputViewModel(Ds);
-                    model.AddSuccess($"{item.GetEntityCode()} {item.Id} added");
+                    model = CreateViewModel(item);
+                    model.AddSuccess($"{Entity.Name} {item.Id} added");
 
                 } else {
 
                     // Update existing item from valid input
 
                     try {
-                        TItem item = Ds.UpdateItem(input);
-                        model = item.GetItemInputViewModel(Ds);
-                        model.AddSuccess($"{item.GetEntityCode()} {item.Id} updated");
+                        TItem item = Ds.GetItemById(input.Id);
+                        UpdateItemFromInput(input, item);
+                        Ds.SaveChanges();
+                        model = CreateViewModel(item);
+                        model.AddSuccess($"{Entity.Name} {item.Id} updated");
                     }
                     catch (DataStore.ItemNotFoundException) {
                         TItem item = new();
-                        throw new DataStore.InfoException($"{item.GetEntityCode()} {input.Id} not found");
+                        throw new DataStore.InfoException($"{Entity.Name} {input.Id} not found");
                     }
                 }
             }
 
             catch (DataStore.InfoException ex) {
                 model = input;
-                model.InitViewData(Ds);
+                AddViewData(model);
                 model.AddFail(ex.Message);
             }
 
@@ -139,11 +147,11 @@ namespace MVC_8.Controllers {
             }
 
             int nTotal = Ds.GetNumberOfItems();
-            List<TItem> items = Ds.GetItemsFiltered(filter);
-            List<EntityItem> entitytems = items.Select(i => (EntityItem)i).ToList();
-            ItemListViewModel model = new TItem().GetItemListViewModel(entitytems, nTotal, filter);
+            List<EntityItem> items = Ds.GetItemsFiltered(filter);
+            TListViewModel model = new();
+            model.AddData(items, nTotal, filter);
             model.ErrorMessage = errorMessage;
-            return View("PartialViewItemList", model);
+            return View("PartialViewList", model);
         }
 
         // =======================================
@@ -163,5 +171,17 @@ namespace MVC_8.Controllers {
             responseData.SetFail(text);
             return View("PartialViewErrorMessage", responseData);
         }
+
+        // ======================================================
+        // Even if most things are identical in the controlling
+        // of different entities, some things differ, these are 
+        // handled by each entity controllers itself, but need
+        // be declared here as abstract classes, if are used
+        // from this class
+        // ======================================================
+
+        abstract protected TInputViewModel CreateViewModel(TItem item);
+        abstract protected void AddViewData(TInputViewModel model);
+        abstract public void UpdateItemFromInput(TInputViewModel model, TItem item);
     }
 }

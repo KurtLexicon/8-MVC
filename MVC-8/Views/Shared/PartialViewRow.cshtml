@@ -1,0 +1,21 @@
+﻿@using MVC_8.Models.ViewModels
+@model RowViewModel
+
+@{
+    Layout = null;
+    RowViewModel m = Model;
+}
+
+<div class="row">
+    @foreach (string cellData in m.Values){
+        <div class="col-sm">
+            @cellData
+        </div>
+    }
+    <div class="col-sm">
+        <button class="btn btn-danger" onclick="removeItem(@m.Id)">Remove</button>
+    </div>
+    <div class="col-sm">
+        <button class="btn btn-info" onclick="getItem(@m.Id)">Details</button>
+    </div>
+</div>

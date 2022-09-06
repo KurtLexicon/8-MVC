@@ -1,0 +1,49 @@
+﻿@using MVC_8.Models.ViewModels
+@model ListViewModel
+
+@{
+    Layout = null;
+    ListViewModel m = Model;
+    string listHeader = $"{m.Rows.Count()} / {m.TotalCount} {m.Entity.Names}";
+}
+
+<div class="table">
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage)) {
+        <div class="messageContainer">
+            <div class="responseMessage failMessage" onclick="removeResponseMessage()">
+                @Model.ErrorMessage
+            </div>
+        </div>
+    }
+    <div class="itemListHeader">
+        <h4>@listHeader</h4>
+        <input id="inputFilter" type="text" autocomplete="off" onkeydown="onEnterGetItems(event)" autofocus onFocus="this.select()" size="10" value="@m.Filter" />
+        <button id="getItemsButton" type="button" class="btn btn-info" onclick="getItemsList()">GO</button>
+        <div class="sectionButtons peopleHeaderLast">
+            <button class="btn btn-info" onclick="getItem()">
+              <span class="glyphicon glyphicon-plus"></span> Add @m.Entity.Name
+            </button>
+            @if(@m.Entity.CanCreateRandom) {
+                <button class="btn btn-info" onclick="addRandomItem()">
+                  <span class="glyphicon glyphicon-plus"></span> Add Random @m.Entity.Name
+                </button>
+            }
+        </div>
+    </div>
+    <hr />
+
+    <div class="container">
+        <div class="row header-row">
+            @foreach (string header in m.Headers){
+                <div class="col-sm header-cell">
+                    @header
+                </div>
+            }
+            <div class="col-sm header-cell"></div>
+            <div class="col-sm header-cell"></div>
+        </div>
+        @foreach (RowViewModel row in m.Rows) {
+            <partial name="PartialViewRow" model=@row />
+        }
+    </div>
+</div>
