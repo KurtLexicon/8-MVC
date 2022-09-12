@@ -118,6 +118,16 @@ form {
 /**************************
 *** Page Header
 **************************/
+#logoutForm {
+    padding:0;
+    margin: 0;
+}
+
+#logout {
+    padding: 0;
+    margin: 0;
+}
+
 
 header {
     align-self: stretch;
@@ -129,7 +139,7 @@ header {
     border-bottom-width: 3px;
     max-height: 30%;
     margin-bottom: 0.5em;
-    font-size: 2.0vw;
+    font-size: 2vw;
 }
 
     header .logo {
@@ -184,13 +194,29 @@ header {
         color: black;
     }
 
-        header nav .linkbutton:hover {
-            font-weight: bold;
-            min-height: 1.9em;
-            min-width: 7.8em;
-            border-width: 0.1em;
-            color: black;
-        }
+.clicklabel {
+    cursor: pointer;
+}
+
+input[type="radio"]:checked + label {
+    background-color: #00C000 !important;
+    color: #000000 !important;
+}
+
+input[type="radio"] + label {
+    font-size: 110%;
+    margin-left: -0.8em;
+    margin-right: 0.8em
+}
+
+
+header nav .linkbutton:hover {
+    font-weight: bold;
+    min-height: 1.9em;
+    min-width: 7.8em;
+    border-width: 0.1em;
+    color: black;
+}
 
         header nav .linkbutton:active {
             position: relative;
@@ -231,6 +257,16 @@ footer {
 /**************************
 *** Page specific
 **************************/
+
+.greenbadge {
+    background-color: #40ff40;
+    color: black;
+}
+
+    .greenbadge:hover {
+        cursor: pointer;
+    }
+
 
 #btnEditLanguagesOpen {
     margin-left: 0.5em;
@@ -285,6 +321,8 @@ footer {
     position: relative;
     top: -0.4em;
     left: -0.4em;
+    width: 0;
+    height: 0;
     overflow: visible;
 }
 
@@ -351,4 +389,11 @@ footer {
     position: sticky;
     padding-top: 0;
     margin-top:0;
+}
+
+/** Misc **/
+.popupBase {
+    position: relative;
+    width: 0px;
+    height: 0px;
 }

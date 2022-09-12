@@ -1,0 +1,33 @@
+﻿@using MVC_8.Models.ViewModels
+@model DetailsViewModel
+
+@{
+    DetailsViewModel m = Model;
+    string messageClass = Model.IsSuccess() ?
+        "responseMessage successMessage" :
+        "responseMessage failMessage";
+}
+
+<form id="itemDetailForm" asp-controller="Home" asp-action="AddOrUpdateItem" method="post">
+    <div id="detailsMessage"  class=messageContainer>
+        @if (!string.IsNullOrWhiteSpace(Model.Message())) {
+            <div class="@messageClass" onclick="removeResponseMessage()">
+                @Model.Message()
+            </div>
+        }
+    </div>
+    <div class="formgrid">
+        <div class="formbuttons">
+            <input id="btnClose" value="Close" type="button" onclick="closeInputBox()" class="btn btn-secondary formbtn">
+            <input id="btnNew" value="New" type="button" onclick="getItem()" class="btn btn-primary formbtn">
+        </div>
+
+        @RenderBody()
+
+        <div></div>
+        <div class="formbuttons">
+            <input id="btnReset" value="Reset" type="reset" class="btn btn-secondary">
+            <input id="btnSave" value="Save" type="button" onclick="addOrUpdateItem()" class="btn btn-primary">
+        </div>
+    </div>
+</form>

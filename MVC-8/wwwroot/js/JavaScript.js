@@ -1,51 +1,89 @@
 ﻿
-/* === Post JSON Return HTML-section === */
+/* === GET / Post-JSON, Return HTML-section === */
 
-function errorHandler(text) {
-    function escape(htmlStr) {
-        // https://www.educative.io/answers/how-to-escape-unescape-html-characters-in-string-in-javascript
-        return htmlStr.replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-    }
-    console.log(text);
-    return `<div class="errorMessage">${escape(text)}</div>`;
+async function doGet(url, params) {
+    const options = {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Accept': 'text/html',
+        }
+    };
+    const fullUrl = addParams(url, params);
+    return await doFetch(fullUrl, options);
 }
 
-async function PostJson(url, data) {
-    try {
-        if (url.startsWith('//')) {
-            // This happens if EntityCode is missing for some reason
-            throw 'Url starts with //';
+async function doDelete(url, params) {
+    const options = {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+            'Accept': 'text/html',
         }
+    };
+    const fullUrl = addParams(url, params);
+    return await doFetch(fullUrl, options);
+}
 
-        const options = {
-            method: 'POST',
-            credentials: 'include',
-            body: JSON.stringify(data),
-            headers: {
-                'Accept': 'text/html',
-                'Content-type': 'application/json'
-            }
-        };
+
+
+function addParams(url, params) {
+    var queryParams = [];
+    for (let key in params) {
+        let str = `${key}=${encodeURIComponent(params[key])}`;
+        queryParams.push(str);
+    }
+    return `${url}?${queryParams.join("&")}`;
+}
+
+async function doPost(url, data) {
+    const options = {
+        method: 'POST',
+        credentials: 'include',
+        body: JSON.stringify(data),
+        headers: {
+            'Accept': 'text/html',
+            'Content-type': 'application/json'
+        }
+    };
+    return await doFetch(url, options);
+}
+
+async function doFetch(url, options) {
+    try {
         console.log(`Calling ${url}`);
         let response = await fetch(url, options);
-
-        if (response.ok) {
-            return await response.text();
-        } else if (response.error) {
-            let errText = await response.error?.text();
-            return errorHandler(errText ?
-                `Error calling ${url}: ${errText}` :
-                `Error calling ${url}: ${response.status} ${response.statusText}`);
-        } else {
-            return errorHandler(`Error calling ${url}: ${response.status} ${response.statusText}`);
-        }
+        return handleResponse(url, response)
     } catch {
         return errorHandler(`Call to ${url}: Network failure`);
     }
+}
+
+async function handleResponse(url, response) {
+    if (response.ok) {
+        return await response.text();
+    } else if (response.error) {
+        let errText = await response.error?.text();
+        return errorHandler(errText ?
+            `Error calling ${url}: ${errText}` :
+            `Error calling ${url}: ${response.status} ${response.statusText}`);
+    } else {
+        return errorHandler(`Error calling ${url}: ${response.status} ${response.statusText}`);
+    }
+}
+
+function escape(htmlStr) {
+    // https://www.educative.io/answers/how-to-escape-unescape-html-characters-in-string-in-javascript
+    return htmlStr.replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function errorHandler(text) {
+    console.log(text);
+    return `<div class="errorMessage">${escape(text)}</div>`;
 }
 
 /* === Misc DOM === */
@@ -55,16 +93,23 @@ function entityCode() {
     return elem && elem.dataset.itemCode;
 }
 
-function selectName() {
-    const elem = document.getElementById('Name');
+function selectElement(id) {
+    const elem = document.getElementById(id);
     elem && elem.focus();
     elem && elem.select();
 }
 
+function selectName() {
+    selectElement('Name');
+}
+
 function selectFilter() {
-    const elem = document.getElementById('inputFilter');
-    elem && elem.focus();
-    elem && elem.select();
+    selectElement('inputFilter');
+}
+
+function getFilterText() {
+    const elemFilter = document.getElementById('inputFilter');
+    return elemFilter ? elemFilter.value : '';
 }
 
 function removeResponseMessage() {
@@ -74,12 +119,16 @@ function removeResponseMessage() {
     }
 }
 
+function setResponseMessage(id, innerHtml) {
+    const elem = document.getElementById(id);
+    elem && (elem.innerHTML = innerHtml);
+}
+
 function closeInputBox() {
     const elemDetailsBox = document.getElementById('detailsBox');
     elemDetailsBox && (elemDetailsBox.innerHTML = '');
     selectFilter();
 }
-
 
 async function onEnterGetItems(event) {
     if (event.key === "Enter") {
@@ -93,34 +142,13 @@ async function onEnterSaveItem(event) {
     }
 }
 
-/* === Handle Language pop up */
-
-function listBoxCLick(option) {
-    // option.selected = !option.selected;
+function getRadioValue(name) {
+    const elems = document.getElementsByName(name);
+    const elem = elems && Array.from(elems).find(e => e.checked);
+    return elem && elem.value || "";
 }
 
-//function initSelectBox() {
-//    document.addEventListener('keydown', event => {
-//        try {
-//            switch (event.key) {
-//                case Key.ArrowUp:
-//                case Key.ArrowDown:
-//                case Key.ArrowLeft:
-//                case Key.ArrowRight:
-//                    handleArrowKey(event)
-//                    event.preventDefault();
-//                    break;
-//                case Key.Enter:
-//                    handleEnterKey()
-//                    event.preventDefault();
-//                    break;
-//                default:
-//            }
-//        } catch (err) {
-//            setStatusText(err)
-//        }
-//    });
-//}
+/* === Handle Language pop up */
 
 function editLanguagesOpen() {
     const elem = document.getElementById('languagePopup');
@@ -156,21 +184,19 @@ function changeLanguages() {
 /* === Handle Items === */
 
 async function getItemsList() {
-
-    const elemFilter = document.getElementById('inputFilter');
-    const filter = elemFilter ? elemFilter.value : '';
-
-    const text = await PostJson(`/${entityCode()}/GetItems`, filter);
+    const filterText = getFilterText();
+    const category = getRadioValue('category-filter');
+    const responseText = await doGet(`/${entityCode()}/GetList`, { filterText, category });
 
     const elemItemsList = document.getElementById('itemsList');
-    elemItemsList && (elemItemsList.innerHTML = text);
+    elemItemsList && (elemItemsList.innerHTML = responseText);
 
     selectFilter()
 }
 
 async function getItem(id) {
 
-    const text = await PostJson(`/${entityCode()}/getItem`, id);
+    const text = await doPost(`/${entityCode()}/getItem`, id);
 
     const elemDetailsBox = document.getElementById('detailsBox');
     elemDetailsBox && (elemDetailsBox.innerHTML = text);
@@ -178,20 +204,40 @@ async function getItem(id) {
     selectName();
 }
 
-async function removeItem(id) {
-    const elemFilter = document.getElementById('inputFilter');
-    const filter = elemFilter ? elemFilter.value : '';
-
-    const text = await PostJson(`/${entityCode()}/DeleteItem`, { id, filter });
+async function setUserRole(id, role) {
+    const filterText = getFilterText()
+    const category = getRadioValue('radio-filter');;
+    const responseText = await doPost(`/${entityCode()}/UpdateRole`, { id, role, filter: { filterText, category } });
 
     const elemItemsList = document.getElementById('itemsList');
-    elemItemsList && (elemItemsList.innerHTML = text);
-
+    elemItemsList && (elemItemsList.innerHTML = responseText);
     selectFilter()
 }
 
+async function handleItemDeleted(id) {
+    const elemId = document.getElementById('Id');
+    const idValue = elemId ? elemId.value : '';
+    if (id.toString() === idValue) {
+        closeInputBox()
+    }
+}
+
+async function removeItem(id) {
+    const text = await doDelete(`/${entityCode()}/DeleteItem`, { id });
+
+    if (text.includes('failMessage')) {
+        setResponseMessage('listMessage', text)
+    } else if (text.includes('errorMessage')) {
+        const elemItemsList = document.getElementById('itemsList');
+        elemItemsList && (elemItemsList.innerHTML = text);
+    } else {
+        await getItemsList(entityCode());
+        handleItemDeleted(id)
+    }
+}
+
 // https://stackoverflow.com/questions/5866169/how-to-get-all-selected-values-of-a-multiple-select-box
-// Return an array of the selected opion values
+// Return an array of the selected option values
 // select is an HTML select element
 function getSelectValues(select) {
     let result = [];
@@ -213,6 +259,7 @@ async function addOrUpdateItem() {
     for (let i = 0; i < inputs.length; i++) {
         formData[inputs[i].name] = inputs[i].value;
     }
+
     const selects = document.querySelectorAll('#itemDetailForm select');
     for (let i = 0; i < selects.length; i++) {
         if (selects[i].multiple) {
@@ -222,7 +269,9 @@ async function addOrUpdateItem() {
         }
     }
 
-    const text = await PostJson(`/${entityCode()}/AddOrUpdateItem`, formData);
+    const id = parseInt(formData.id);
+    const action = id === 0 ? 'AddItem' : 'UpdateItem';
+    const text = await doPost(`/${entityCode()}/${action}`, formData);
 
     const elemDetailsBox = document.getElementById('detailsBox');
     elemDetailsBox && (elemDetailsBox.innerHTML = text);
@@ -233,7 +282,7 @@ async function addOrUpdateItem() {
 }
 
 async function addRandomItem() {
-    const text = await PostJson(`/${entityCode()}/AddRandomItem`, {});
+    const text = await doPost(`/${entityCode()}/AddRandomItem`, {});
 
     const elemDetailsBox = document.getElementById('detailsBox');
     elemDetailsBox && (elemDetailsBox.innerHTML = text);
@@ -243,13 +292,13 @@ async function addRandomItem() {
 /* === Some test functions === */
 
 async function testUrlError() {
-    const text = await PostJson('/SomethingStupid', {});
+    const text = await doPost('/SomethingStupid', {});
     const elemItemsList = document.getElementById('itemsList');
     elemItemsList && (elemItemsList.innerHTML = text);
 }
 
 async function testErrorCode() {
-    const text = await PostJson('/GetCoffee', {});
+    const text = await doPost('/GetCoffee', {});
     const elemDetailsBox = document.getElementById('detailsBox');
     elemDetailsBox && (elemDetailsBox.innerHTML = text);
 }

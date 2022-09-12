@@ -1,0 +1,19 @@
+﻿@using MVC_8.Models.ViewModels
+@model SharedViewModel
+
+@{
+    Layout = null;
+    SharedViewModel m = Model;
+    string messageClass = Model.IsSuccess() ?
+        "responseMessage successMessage" :
+        "responseMessage failMessage";
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.Message())) {
+    <div class="@messageClass" onclick="removeResponseMessage()">
+        @Model.Message()
+    </div>
+} else {
+    <div></div>
+}
+@RenderBody()

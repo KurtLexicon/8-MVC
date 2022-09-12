@@ -15,25 +15,52 @@
 </head>
 <body>
     <header>
-        <a href="/"><img class="logo" src="/img/logo.jpg" alt="Logo"/></a>
-        <nav>
-            <ul>
-                <li><a class="linkbutton" href="/About">About</a></li>
-                <li><a class="linkbutton" style="background:#FF8080;" href="/People">People</a></li>
-                <li><a class="linkbutton" style="background:#80FF80;" href="/Cities">Cities</a></li>
-                <li><a class="linkbutton" style="background:#8080FF;" href="/Countries">Countries</a></li>
-                <li><a class="linkbutton" style="background:#f1f13b;" href="/Languages">Languages</a></li>
-            </ul>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a href="/"><img class="logo" src="/img/logo.jpg" alt="Logo" /></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if (User.IsInRole("Admin") || User.IsInRole("User")) {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="People">People</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin")) {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Cities">Cities</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Countries">Countries</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Languages">Languages</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Users">Users</a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <partial name="_LoginPartial" />
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </nav>
     </header>
+
     <main>
         @RenderBody()
     </main>
     <footer>
         &copy;@DateTime.Now.ToString("yyyy-MM-dd") Kurt Lexicon
     </footer>
-    
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    @await RenderSectionAsync("Scripts", required:false)
 </body>
 </html>

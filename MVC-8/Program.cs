@@ -1,20 +1,42 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MVC_8.Data;
+using MVC_8.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSession();
 builder.Services.AddMvc();
+builder.Services.AddSession(options => {
+    options.IdleTimeout = TimeSpan.FromMinutes(60);
+});
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-var app = builder.Build();
-app.UseSession();
+builder.Services
+    .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.Configure<IdentityOptions>(o => {
+    o.Password.RequireLowercase = false;
+    o.Password.RequireUppercase = false;
+    o.Password.RequireDigit = false;
+    o.Password.RequireNonAlphanumeric = false;
+    o.Password.RequiredLength = 3;
+    o.Password.RequiredUniqueChars = 1;
+});
 
+builder.Services.AddRazorPages();
+
+var app = builder.Build();
+
+app.UseSession();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
@@ -23,44 +45,9 @@ app.MapControllerRoute(
 );
 
 app.MapControllerRoute(
-    name: "About",
-    pattern: "About",
-    defaults: new { controller = "Home", action = "About" }
-);
-
-app.MapControllerRoute(
-    name: "People",
-    pattern: "People",
-    defaults: new { controller = "Home", action = "People" }
-);
-
-app.MapControllerRoute(
-    name: "Countries",
-    pattern: "Countries",
-    defaults: new { controller = "Home", action = "Countries" }
-);
-
-app.MapControllerRoute(
-    name: "Cities",
-    pattern: "Cities",
-    defaults: new { controller = "Home", action = "Cities" }
-);
-
-app.MapControllerRoute(
-    name: "Languages",
-    pattern: "Languages",
-    defaults: new { controller = "Home", action = "Languages" }
-);
-
-app.MapControllerRoute(
-    name: "GetCoffee",
-    pattern: "GetCoffee",
-    defaults: new { controller = "Home", action = "GetCoffee" }
-);
-
-app.MapControllerRoute(
     name: "ItemActions",
-    pattern: "{controller}/{action}"
+    pattern: "{controller}/{action}",
+    defaults: new { action = "Index" }
 );
 
 app.Run();

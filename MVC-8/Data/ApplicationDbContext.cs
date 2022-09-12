@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MVC_8.Models.Home;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MVC_8.Models;
+using MVC_8.Models.Home;
 
 namespace MVC_8.Data {
-    public class ApplicationDbContext : DbContext {
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser> {
         public ApplicationDbContext() { }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -15,6 +17,8 @@ namespace MVC_8.Data {
         public DbSet<Language> Languages { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            base.OnModelCreating(modelBuilder);
+
             List<Language> languages = InitData.SeedLanguages();
             modelBuilder.Entity<Language>().HasData(languages.ToArray());
 
@@ -39,6 +43,39 @@ namespace MVC_8.Data {
             modelBuilder.Entity<Person>().Navigation(x => x.City).AutoInclude();
             modelBuilder.Entity<City>().Navigation(x => x.Country).AutoInclude();
             modelBuilder.Entity<Person>().Navigation(x => x.Languages).AutoInclude();
+
+            string adminRoleId = Guid.NewGuid().ToString();
+            string userRoleId = Guid.NewGuid().ToString();
+            string userId = Guid.NewGuid().ToString();
+            modelBuilder.Entity<IdentityRole>().HasData(new {
+                Id = adminRoleId,
+                Name = "Admin",
+                NormalizeName = "ADMIN"
+            });
+            modelBuilder.Entity<IdentityRole>().HasData(new {
+                Id = userRoleId,
+                Name = "User",
+                NormalizeName = "USER"
+            });
+
+            PasswordHasher<ApplicationUser> passwordHasher = new();
+
+            modelBuilder.Entity<ApplicationUser>().HasData(new ApplicationUser {
+                Id = userId,
+                Email = "admin@admin.com",
+                NormalizedEmail = "ADMIN@ADMIN.COM",
+                UserName = "admin",
+                NormalizedUserName = "ADMIN",
+                FirstName = "Admin",
+                LastName = "Admin",
+                BirthDate = new DateTime(),
+                PasswordHash = passwordHasher.HashPassword(null!, "password")
+            });
+
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string> {
+                UserId = userId,
+                RoleId = adminRoleId
+            });
 
             // Global turn off delete behaviour on foreign keys
             // https://github.com/dotnet/efcore/issues/13366

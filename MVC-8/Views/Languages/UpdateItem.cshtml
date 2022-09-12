@@ -1,0 +1,18 @@
+﻿@using MVC_8.Models.ViewModels
+@model LanguageViewModel
+
+@{
+    Layout = "_LayoutDetail";
+}
+
+<label asp-for="Id" ></label>
+<div class="input-group">
+    <input readonly type="text" asp-for="Id" size="30" name="id" value=@Model.Id />
+</div>
+
+<label asp-for="Name" ></label>
+<div class="input-group">
+    <input  type="text" asp-for="Name" size="30" name="name" value=@Model.Name autocomplete="off" onkeydown="onEnterSaveItem(event)" />
+    <span asp-validation-for="Name" class="text-danger" ></span>
+</div><label asp-for="Name" ></label>
+

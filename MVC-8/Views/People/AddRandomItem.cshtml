@@ -1,0 +1,81 @@
+﻿@using MVC_8.Models.ViewModels
+@model PersonViewModel
+
+@{
+    Layout = "_LayoutDetail";
+    SelectList SelectCities = Model.SelectCities();
+    SelectList SelectLanguages = Model.SelectLanguages();
+    int nSelectLanguages = SelectLanguages.Count();
+    int languageSelectSize = Math.Min(nSelectLanguages, 10);
+    List<string> strLanguageIds = Model.LanguageIds.Select(x => x.ToString()).ToList();
+
+    IEnumerable<string> selectedLanguagesNames = SelectLanguages
+        .Where(x => IsLanguageSelected(x.Value))
+        .Select(x => x.Text);
+    string strSelectedLanguages = string.Join(", ", selectedLanguagesNames);
+
+    bool IsLanguageSelected(string strLanguageId) {
+        return strLanguageIds.Contains(strLanguageId);
+    }
+}
+
+
+<label asp-for="Id"></label>
+<div class="input-group">
+    <input readonly type="text" asp-for="Id" size="30" name="id" value=@Model.Id />
+</div>
+
+<label asp-for="Name"></label>
+<div class="input-group">
+    <input asp-for="Name" size="30" name="name" value=@Model.Name autocomplete="off" onkeydown="onEnterSaveItem(event)" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+
+<label asp-for="Phone"></label>
+<div class="input-group">
+    <input asp-for="Phone" size="30" name="phone" value=@Model.Phone autocomplete="off" onkeydown="onEnterSaveItem(event)" />
+    <span asp-validation-for="Phone" class="text-danger"></span>
+</div>
+
+<label asp-for="CityId"></label>
+<div class="input-group">
+    <select asp-for="CityId"
+            name="CityId"
+            value=@Model.CityId
+            class="form-control"
+            asp-items="@SelectCities"
+            onkeydown="onEnterSaveItem(event)"></select>
+    <span asp-validation-for="CityId" class="text-danger"></span>
+</div>
+
+<label asp-for="LanguageIds"></label>
+<div class="input-group">
+    <div class="flexHorizontal">
+        <input id="strSelectedLanguages" type="text" value="@strSelectedLanguages" readonly size="30" autocomplete="off" onkeydown="onEnterSaveItem(event)" />
+        <div id="languagePopup" class="editLanguagesContainer visibilityHidden">
+            <div class="editLanguages">
+                <select asp-for="LanguageIds"
+                        name="LanguageIds"
+                        size=@languageSelectSize
+                        class="form-control"
+                        onkeydown="onEnterSaveItem(event)"
+                        onchange="changeLanguages()">
+                    @foreach (SelectListItem option in SelectLanguages) {
+                        @if (IsLanguageSelected(option.Value)) {
+                            <option value=@option.Value selected onclick="listBoxCLick(this)">
+                                @option.Text
+                            </option>
+                        } else {
+                            <option value=@option.Value onclick="listBoxCLick(this)">
+                                @option.Text
+                            </option>
+                        }
+                    }
+                </select>
+                <input id="btnEditLanguagesClose" value="Close" type="button" onclick="editLanguagesClose()" class="btn btn-secondary formbtn" />
+            </div>
+        </div>
+        <input id="btnEditLanguagesOpen" value="Edit" type="button" onclick="editLanguagesOpen()" class="btn btn-secondary formbtn" />
+    </div>
+    <span asp-validation-for="LanguageIds" class="text-danger"></span>
+</div>

@@ -1,0 +1,59 @@
+﻿@using MVC_8.Models.ViewModels
+@model UserListViewModel
+
+@{
+    Layout = null;
+    UserListViewModel m = Model;
+    string listHeader = $"{m.Rows.Count()} / {m.TotalCount} {m.Entity.Names}";
+    string checkedAttribute(string role) {
+        return m.RoleFilter == role ? "checked='true'" : "";
+    }
+}
+
+<div id="listMessage" class="messageContainer">
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage)) {
+        <div class="responseMessage failMessage" onclick="removeResponseMessage()">
+            @Model.ErrorMessage
+        </div>
+    }
+</div>
+<div class="itemListHeader">
+    <h4>@listHeader</h4>
+
+    <input id="inputFilter" type="text" autocomplete="off" onkeydown="onEnterGetItems(event)" autofocus onFocus="this.select()" size="10" value="@m.Filter" />
+    <button id="getItemsButton" type="button" class="btn btn-info" onclick="getItemsList()">GO</button>
+    <div class="peopleHeaderLast sectionButtons">
+        <input type="radio" class="btn-check" id="radio-admin" name="category-filter" value="Admin" onchange="getItemsList()" @checkedAttribute("Admin")>
+        <Label class="btn btn-secondary" for="radio-admin">Admin</Label><br>
+
+        <input type="radio" class="btn-check" id="radio-users" name="category-filter" value="User" onchange="getItemsList()" @checkedAttribute("User")>
+        <label class="btn btn-secondary" for="radio-users">Users</label><br>
+
+        <input type="radio" class="btn-check" id="radio-all" name="category-filter" value="" onchange="getItemsList()" @checkedAttribute("")>
+        <label class="btn btn-secondary" for="radio-all">All</label>
+    </div>
+</div>
+<hr />
+
+<div class="table">
+    <div class="container">
+        <div class="row header-row">
+            @foreach (string header in m.Headers) {
+                <div class="col-sm header-cell">
+                    @header
+                </div>
+            }
+            <!-- 3 empty column headers for 3 button columns (Are they actually needed?) -->
+            <div class="col-sm header-cell"></div>
+            <div class="col-sm header-cell"></div>
+            <div class="col-sm header-cell"></div>
+        </div>
+        @foreach (UserRowViewModel row in m.Rows) {
+            <partial name="PartialViewUserRow" model=@row />
+        }
+    </div>
+</div>
+
+
+
+
