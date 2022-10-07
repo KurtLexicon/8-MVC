@@ -3,10 +3,9 @@ using MVC_8.Data;
 using MVC_8.Models;
 using MVC_8.Models.Home;
 using MVC_8.Models.ViewModels;
-using Newtonsoft.Json;
 
 namespace MVC_8.Controllers {
-    abstract public class ItemController<
+    abstract public class ItemController_ORG<
             TItem,
             TListViewModel,
             TInputViewModel,
@@ -20,21 +19,20 @@ namespace MVC_8.Controllers {
         protected DataStoreItem<TItem> Ds { get; set; } = null!;
         protected EntityConst Entity { get; set; } = null!;
 
-        protected ItemController() : base() { }
+        protected ItemController_ORG() : base() { }
 
         // =======================================
         // Get Items
         // =======================================
 
         [HttpPost]
-        public IActionResult GetItems([FromBody] string filter) {
+        public ActionResult GetItems([FromBody] string filter) {
             try {
                 int nTotal = Ds.GetNumberOfItems();
                 List<EntityItem> items = Ds.GetItemsFiltered(filter);
                 TListViewModel model = new();
                 model.AddData(items, nTotal, filter);
-                return Json(model, null);
-                // return View("PartialViewList", model);
+                return View("PartialViewList", model);
             }
             catch (Exception e) {
                 return HandleError(e);
@@ -65,8 +63,7 @@ namespace MVC_8.Controllers {
 
                 TInputViewModel model = CreateViewModel(item);
                 model.AddResponseData(responseData);
-                return Json(model, null);
-                // View("PvDetail", model);
+                return View("PvDetail", model);
             }
             catch (Exception e) {
                 return HandleError(e);
@@ -117,8 +114,7 @@ namespace MVC_8.Controllers {
                 model.AddFail(ex.Message);
             }
 
-            return Json(model, null);
-            // return View("PvDetail", model);
+            return View("PvDetail", model);
         }
 
         // =======================================
@@ -155,15 +151,14 @@ namespace MVC_8.Controllers {
             TListViewModel model = new();
             model.AddData(items, nTotal, filter);
             model.ErrorMessage = errorMessage;
-            return Json(model, null);
-            // return View("PartialViewList", model);
+            return View("PartialViewList", model);
         }
 
         // =======================================
         // === Handle Errors
         // =======================================
 
-        private IActionResult HandleError(Exception e) {
+        private ViewResult HandleError(Exception e) {
             ResponseData responseData = new();
             string text;
             if (e != null && !string.IsNullOrWhiteSpace(e.Message)) {
@@ -174,8 +169,7 @@ namespace MVC_8.Controllers {
                 text = "Unknown error";
             }
             responseData.SetFail(text);
-            return Json(responseData, null);
-            // return View("PartialViewErrorMessage", responseData);
+            return View("PartialViewErrorMessage", responseData);
         }
 
         // ======================================================
