@@ -50,12 +50,12 @@ namespace MVC_8.Data {
             modelBuilder.Entity<IdentityRole>().HasData(new {
                 Id = adminRoleId,
                 Name = "Admin",
-                NormalizeName = "ADMIN"
+                NormalizedName = "ADMIN"
             });
             modelBuilder.Entity<IdentityRole>().HasData(new {
                 Id = userRoleId,
                 Name = "User",
-                NormalizeName = "USER"
+                NormalizedName = "USER"
             });
 
             PasswordHasher<ApplicationUser> passwordHasher = new();
@@ -64,8 +64,8 @@ namespace MVC_8.Data {
                 Id = userId,
                 Email = "admin@admin.com",
                 NormalizedEmail = "ADMIN@ADMIN.COM",
-                UserName = "admin",
-                NormalizedUserName = "ADMIN",
+                UserName = "admin@admin.com",
+                NormalizedUserName = "ADMIN@ADMIN.COM",
                 FirstName = "Admin",
                 LastName = "Admin",
                 BirthDate = new DateTime(),

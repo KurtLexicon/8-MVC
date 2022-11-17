@@ -4,6 +4,7 @@ using MVC_8.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVC_8.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221117084116_221117-1")]
+    partial class _2211171
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,27 +41,12 @@ namespace MVC_8.Migrations
                     b.HasData(
                         new
                         {
-                            LanguagesId = 1,
+                            LanguagesId = 7,
                             PeopleId = 1
-                        },
-                        new
-                        {
-                            LanguagesId = 6,
-                            PeopleId = 1
-                        },
-                        new
-                        {
-                            LanguagesId = 1,
-                            PeopleId = 2
                         },
                         new
                         {
                             LanguagesId = 4,
-                            PeopleId = 2
-                        },
-                        new
-                        {
-                            LanguagesId = 3,
                             PeopleId = 3
                         },
                         new
@@ -69,88 +56,78 @@ namespace MVC_8.Migrations
                         },
                         new
                         {
-                            LanguagesId = 6,
+                            LanguagesId = 3,
                             PeopleId = 3
                         },
                         new
                         {
-                            LanguagesId = 6,
+                            LanguagesId = 1,
+                            PeopleId = 4
+                        },
+                        new
+                        {
+                            LanguagesId = 3,
                             PeopleId = 4
                         },
                         new
                         {
                             LanguagesId = 2,
-                            PeopleId = 5
+                            PeopleId = 4
+                        },
+                        new
+                        {
+                            LanguagesId = 5,
+                            PeopleId = 4
                         },
                         new
                         {
                             LanguagesId = 6,
                             PeopleId = 5
+                        },
+                        new
+                        {
+                            LanguagesId = 7,
+                            PeopleId = 6
+                        },
+                        new
+                        {
+                            LanguagesId = 6,
+                            PeopleId = 6
+                        },
+                        new
+                        {
+                            LanguagesId = 3,
+                            PeopleId = 6
+                        },
+                        new
+                        {
+                            LanguagesId = 2,
+                            PeopleId = 6
+                        },
+                        new
+                        {
+                            LanguagesId = 7,
+                            PeopleId = 7
+                        },
+                        new
+                        {
+                            LanguagesId = 5,
+                            PeopleId = 9
                         },
                         new
                         {
                             LanguagesId = 1,
-                            PeopleId = 5
-                        },
-                        new
-                        {
-                            LanguagesId = 3,
-                            PeopleId = 5
-                        },
-                        new
-                        {
-                            LanguagesId = 6,
-                            PeopleId = 7
-                        },
-                        new
-                        {
-                            LanguagesId = 3,
-                            PeopleId = 7
-                        },
-                        new
-                        {
-                            LanguagesId = 2,
-                            PeopleId = 7
-                        },
-                        new
-                        {
-                            LanguagesId = 7,
-                            PeopleId = 7
-                        },
-                        new
-                        {
-                            LanguagesId = 4,
-                            PeopleId = 8
-                        },
-                        new
-                        {
-                            LanguagesId = 7,
-                            PeopleId = 8
-                        },
-                        new
-                        {
-                            LanguagesId = 2,
                             PeopleId = 9
                         },
                         new
                         {
-                            LanguagesId = 4,
-                            PeopleId = 9
-                        },
-                        new
-                        {
-                            LanguagesId = 6,
+                            LanguagesId = 1,
                             PeopleId = 10
                         },
                         new
                         {
-                            LanguagesId = 1,
-                            PeopleId = 11
-                        },
-                        new
-                        {
-                            LanguagesId = 2,
-                            PeopleId = 11
+                            LanguagesId = 4,
+                            PeopleId = 10
                         },
                         new
                         {
@@ -159,32 +136,42 @@ namespace MVC_8.Migrations
                         },
                         new
                         {
-                            LanguagesId = 5,
-                            PeopleId = 11
-                        },
-                        new
-                        {
                             LanguagesId = 2,
                             PeopleId = 12
                         },
                         new
                         {
-                            LanguagesId = 1,
-                            PeopleId = 12
-                        },
-                        new
-                        {
                             LanguagesId = 7,
                             PeopleId = 12
                         },
                         new
                         {
                             LanguagesId = 6,
+                            PeopleId = 12
+                        },
+                        new
+                        {
+                            LanguagesId = 3,
+                            PeopleId = 12
+                        },
+                        new
+                        {
+                            LanguagesId = 3,
                             PeopleId = 13
                         },
                         new
                         {
-                            LanguagesId = 7,
+                            LanguagesId = 1,
+                            PeopleId = 13
+                        },
+                        new
+                        {
+                            LanguagesId = 4,
+                            PeopleId = 14
+                        },
+                        new
+                        {
+                            LanguagesId = 6,
                             PeopleId = 14
                         },
                         new
@@ -195,6 +182,16 @@ namespace MVC_8.Migrations
                         new
                         {
                             LanguagesId = 5,
+                            PeopleId = 14
+                        },
+                        new
+                        {
+                            LanguagesId = 1,
+                            PeopleId = 16
+                        },
+                        new
+                        {
+                            LanguagesId = 3,
                             PeopleId = 16
                         },
                         new
@@ -204,13 +201,28 @@ namespace MVC_8.Migrations
                         },
                         new
                         {
-                            LanguagesId = 4,
-                            PeopleId = 16
+                            LanguagesId = 5,
+                            PeopleId = 17
                         },
                         new
                         {
-                            LanguagesId = 7,
-                            PeopleId = 16
+                            LanguagesId = 3,
+                            PeopleId = 17
+                        },
+                        new
+                        {
+                            LanguagesId = 2,
+                            PeopleId = 18
+                        },
+                        new
+                        {
+                            LanguagesId = 1,
+                            PeopleId = 18
+                        },
+                        new
+                        {
+                            LanguagesId = 3,
+                            PeopleId = 18
                         },
                         new
                         {
@@ -219,6 +231,31 @@ namespace MVC_8.Migrations
                         },
                         new
                         {
+                            LanguagesId = 7,
+                            PeopleId = 19
+                        },
+                        new
+                        {
+                            LanguagesId = 4,
+                            PeopleId = 19
+                        },
+                        new
+                        {
+                            LanguagesId = 6,
+                            PeopleId = 19
+                        },
+                        new
+                        {
+                            LanguagesId = 1,
+                            PeopleId = 20
+                        },
+                        new
+                        {
+                            LanguagesId = 7,
+                            PeopleId = 20
+                        },
+                        new
+                        {
                             LanguagesId = 3,
                             PeopleId = 20
                         },
@@ -229,7 +266,12 @@ namespace MVC_8.Migrations
                         },
                         new
                         {
-                            LanguagesId = 2,
+                            LanguagesId = 1,
+                            PeopleId = 21
+                        },
+                        new
+                        {
+                            LanguagesId = 3,
                             PeopleId = 21
                         },
                         new
@@ -239,28 +281,18 @@ namespace MVC_8.Migrations
                         },
                         new
                         {
-                            LanguagesId = 3,
-                            PeopleId = 21
-                        },
-                        new
-                        {
-                            LanguagesId = 2,
+                            LanguagesId = 4,
                             PeopleId = 22
                         },
                         new
                         {
-                            LanguagesId = 7,
-                            PeopleId = 22
-                        },
-                        new
-                        {
-                            LanguagesId = 1,
+                            LanguagesId = 5,
                             PeopleId = 22
                         },
                         new
                         {
                             LanguagesId = 6,
-                            PeopleId = 22
+                            PeopleId = 23
                         },
                         new
                         {
@@ -270,21 +302,36 @@ namespace MVC_8.Migrations
                         new
                         {
                             LanguagesId = 4,
-                            PeopleId = 25
+                            PeopleId = 24
                         },
                         new
                         {
                             LanguagesId = 2,
-                            PeopleId = 25
+                            PeopleId = 24
                         },
                         new
                         {
-                            LanguagesId = 3,
+                            LanguagesId = 1,
+                            PeopleId = 24
+                        },
+                        new
+                        {
+                            LanguagesId = 6,
+                            PeopleId = 24
+                        },
+                        new
+                        {
+                            LanguagesId = 4,
                             PeopleId = 25
                         },
                         new
                         {
                             LanguagesId = 5,
+                            PeopleId = 25
+                        },
+                        new
+                        {
+                            LanguagesId = 6,
                             PeopleId = 25
                         });
                 });
@@ -318,13 +365,13 @@ namespace MVC_8.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "65323db4-0ca7-483b-af60-65a90ec788af",
+                            Id = "cda6f899-bad1-4569-bbd6-9f5d739b779d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "f113ba97-e370-4c47-b3e9-3e5a04487809",
+                            Id = "e3ea8a48-a5fa-4023-8fc3-7ac081f9ed22",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -421,8 +468,8 @@ namespace MVC_8.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "1062b699-f2ac-45e3-abbc-3153cec81ac8",
-                            RoleId = "65323db4-0ca7-483b-af60-65a90ec788af"
+                            UserId = "d4b00c3f-2043-4f5b-bea1-6fe36d82d7ed",
+                            RoleId = "cda6f899-bad1-4569-bbd6-9f5d739b779d"
                         });
                 });
 
@@ -525,22 +572,22 @@ namespace MVC_8.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1062b699-f2ac-45e3-abbc-3153cec81ac8",
+                            Id = "d4b00c3f-2043-4f5b-bea1-6fe36d82d7ed",
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "c73dbe06-684e-4f5e-9a71-fa8aa9a44fe8",
+                            ConcurrencyStamp = "3cdf66bb-0bed-4962-944d-d3397c0ca8b1",
                             Email = "admin@admin.com",
                             EmailConfirmed = false,
                             FirstName = "Admin",
                             LastName = "Admin",
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
-                            NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIM4dyyFgSdUT1AelNuU9anV38CL3nCe1fNJ2pD8Db3bbJo4rutWW6jfu5bPWVpQRQ==",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDY1UTVOO2hetY/xbqTMxSHFNLkMLHJMTaEumBn5Xxncj3lnZmyOJ+BbPvr6O1XdyA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f182b757-3ccc-4e44-8535-99228f1c591a",
+                            SecurityStamp = "406fa485-1414-45af-8c08-165b6fd525cd",
                             TwoFactorEnabled = false,
-                            UserName = "admin@admin.com"
+                            UserName = "admin"
                         });
                 });
 
@@ -752,177 +799,177 @@ namespace MVC_8.Migrations
                         new
                         {
                             Id = 1,
-                            CityId = 5,
-                            Name = "Olle Bildt",
-                            Phone = "669140"
+                            CityId = 6,
+                            Name = "Mika Hjalmarsson",
+                            Phone = "391732"
                         },
                         new
                         {
                             Id = 2,
-                            CityId = 2,
-                            Name = "Dave Walker",
-                            Phone = "147139"
+                            CityId = 5,
+                            Name = "Adrian Carlsson",
+                            Phone = "595416"
                         },
                         new
                         {
                             Id = 3,
-                            CityId = 2,
-                            Name = "Kalle Lindgren",
-                            Phone = "743027"
+                            CityId = 6,
+                            Name = "Kim Vretman",
+                            Phone = "151225"
                         },
                         new
                         {
                             Id = 4,
-                            CityId = 9,
-                            Name = "Olle Fahlgren",
-                            Phone = "280915"
+                            CityId = 7,
+                            Name = "Ilja Ålander",
+                            Phone = "703783"
                         },
                         new
                         {
                             Id = 5,
-                            CityId = 1,
-                            Name = "Beda Ståhl",
-                            Phone = "280452"
+                            CityId = 4,
+                            Name = "Ture Hjalmarsson",
+                            Phone = "646665"
                         },
                         new
                         {
                             Id = 6,
-                            CityId = 5,
-                            Name = "Dave Ålander",
-                            Phone = "946739"
+                            CityId = 11,
+                            Name = "Olle Carlsson",
+                            Phone = "583858"
                         },
                         new
                         {
                             Id = 7,
-                            CityId = 12,
-                            Name = "Adrian Sventon",
-                            Phone = "840031"
+                            CityId = 5,
+                            Name = "Olle Ivarsson",
+                            Phone = "923612"
                         },
                         new
                         {
                             Id = 8,
-                            CityId = 1,
-                            Name = "Åsa Dahl",
-                            Phone = "426903"
+                            CityId = 6,
+                            Name = "Yngve Walker",
+                            Phone = "279100"
                         },
                         new
                         {
                             Id = 9,
-                            CityId = 5,
-                            Name = "Alva Sventon",
-                            Phone = "457281"
+                            CityId = 3,
+                            Name = "Nisse Carlsson",
+                            Phone = "409782"
                         },
                         new
                         {
                             Id = 10,
-                            CityId = 1,
-                            Name = "Ulla Fahlgren",
-                            Phone = "368535"
+                            CityId = 5,
+                            Name = "Kalle Hjalmarsson",
+                            Phone = "870763"
                         },
                         new
                         {
                             Id = 11,
-                            CityId = 7,
-                            Name = "Nisse Sventon",
-                            Phone = "266125"
+                            CityId = 5,
+                            Name = "Nisse Erixon",
+                            Phone = "122053"
                         },
                         new
                         {
                             Id = 12,
                             CityId = 6,
-                            Name = "Beda Dahl",
-                            Phone = "868170"
+                            Name = "Kalle Erixon",
+                            Phone = "644512"
                         },
                         new
                         {
                             Id = 13,
-                            CityId = 10,
-                            Name = "Ture Bildt",
-                            Phone = "767862"
+                            CityId = 8,
+                            Name = "Kalle Walker",
+                            Phone = "857793"
                         },
                         new
                         {
                             Id = 14,
-                            CityId = 6,
-                            Name = "Nisse Ivarsson",
-                            Phone = "489406"
+                            CityId = 2,
+                            Name = "Lisbet Zackow",
+                            Phone = "161824"
                         },
                         new
                         {
                             Id = 15,
-                            CityId = 7,
-                            Name = "Ture Bildt",
-                            Phone = "436687"
+                            CityId = 10,
+                            Name = "Yngve Walker",
+                            Phone = "585682"
                         },
                         new
                         {
                             Id = 16,
-                            CityId = 10,
-                            Name = "Kalle Malmsten",
-                            Phone = "504479"
+                            CityId = 4,
+                            Name = "Dave Vretman",
+                            Phone = "365417"
                         },
                         new
                         {
                             Id = 17,
-                            CityId = 5,
-                            Name = "Ulla Ålander",
-                            Phone = "928310"
+                            CityId = 10,
+                            Name = "Osborn Malmsten",
+                            Phone = "939992"
                         },
                         new
                         {
                             Id = 18,
-                            CityId = 12,
-                            Name = "Nisse Ålander",
-                            Phone = "351721"
+                            CityId = 5,
+                            Name = "Mika Krall",
+                            Phone = "717346"
                         },
                         new
                         {
                             Id = 19,
-                            CityId = 8,
-                            Name = "Lisbet Jonsson",
-                            Phone = "595372"
+                            CityId = 7,
+                            Name = "Åsa Jonsson",
+                            Phone = "135612"
                         },
                         new
                         {
                             Id = 20,
                             CityId = 11,
-                            Name = "Lotta Malmsten",
-                            Phone = "353681"
+                            Name = "Ture Ståhl",
+                            Phone = "864833"
                         },
                         new
                         {
                             Id = 21,
-                            CityId = 12,
-                            Name = "Mika Erixon",
-                            Phone = "696748"
+                            CityId = 10,
+                            Name = "Alva Zackow",
+                            Phone = "749506"
                         },
                         new
                         {
                             Id = 22,
-                            CityId = 11,
-                            Name = "Ilja Malmsten",
-                            Phone = "608977"
+                            CityId = 5,
+                            Name = "Ture Ståhl",
+                            Phone = "745752"
                         },
                         new
                         {
                             Id = 23,
-                            CityId = 2,
-                            Name = "Nisse Ståhl",
-                            Phone = "693290"
+                            CityId = 5,
+                            Name = "Ylva Vretman",
+                            Phone = "116747"
                         },
                         new
                         {
                             Id = 24,
-                            CityId = 11,
-                            Name = "Ilja Erixon",
-                            Phone = "481369"
+                            CityId = 7,
+                            Name = "Alva Fahlgren",
+                            Phone = "157790"
                         },
                         new
                         {
                             Id = 25,
-                            CityId = 6,
-                            Name = "Alva Fahlgren",
-                            Phone = "599424"
+                            CityId = 5,
+                            Name = "Yngve Erixon",
+                            Phone = "493850"
                         });
                 });
 
