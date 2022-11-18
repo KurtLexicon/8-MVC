@@ -4,22 +4,23 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using MVC_8.Data;
 using MVC_8.Models;
 using MVC_8.Models.Home;
+using MVC_8.Models.Shared;
 using MVC_8.Models.ViewModels;
 using Newtonsoft.Json;
 
 namespace MVC_8.Controllers {
     abstract public class ItemController<
-            TItem,
+            Person,
             TListViewModel,
             TInputViewModel,
             TDataStore> : Controller
-        where TItem : EntityItem, new()
+        where Person : EntityItem, new()
         where TListViewModel : ListViewModel, new()
         where TInputViewModel : DetailsViewModel
-        where TDataStore : DataStoreItem<TItem> {
+        where TDataStore : DataStoreItem<Person> {
 
         protected ApplicationDbContext DbContext { get; set; } = null!;
-        protected DataStoreItem<TItem> Ds { get; set; } = null!;
+        protected DataStoreItem<Person> Ds { get; set; } = null!;
         protected EntityConst Entity { get; set; } = null!;
 
         protected ItemController() : base() { }
@@ -62,7 +63,7 @@ namespace MVC_8.Controllers {
                 int id = value;
                 ResponseData responseData = new();
 
-                TItem item;
+                Person item;
                 if (id == 0) {
                     item = new();
                 } else {
@@ -90,19 +91,20 @@ namespace MVC_8.Controllers {
         // =======================================
 
         [HttpPost]
-        public IActionResult AddOrUpdateItem([FromBody] TInputViewModel input) {
-            TInputViewModel model;
+        public IActionResult AddOrUpdateItem([FromBody] PersonViewModel input) {
+            PersonViewModel model;
             try {
-                if (!ModelState.IsValid) throw new DataStore.InfoException("Please enter valid data");
+                if (!ModelState.IsValid) throw new InfoException("Please enter valid data");
 
                 if (input.Id == 0) {
 
                     // Add new item from valid input
 
-                    EntityItem entityItem = input.GetItem(Ds);
-                    if (entityItem is not TItem) throw new Exception("Program error: TInputViewModel.GetItem did not return TItem");
-                    TItem item = Ds.AddItem((TItem)entityItem);
-                    model = CreateViewModel(item);
+                    List<Language> languages = Ds.GetItemsByIds(Ds.Languages, input.LanguageIds);
+                    EntityItem entityItem = input.GetItem(languages);
+                    if (entityItem is not Person) throw new Exception("Program error: TInputViewModel.GetItem did not return Person");
+                    Person item = Ds.AddItem((Person)entityItem);
+                    model = new(item, Ds.Cities.ToList(), Ds.Languages.ToList());
                     model.AddSuccess($"{Entity.Name} {item.Id} added");
 
                 } else {
@@ -110,20 +112,20 @@ namespace MVC_8.Controllers {
                     // Update existing item from valid input
 
                     try {
-                        TItem item = Ds.GetItemById(input.Id);
+                        Person item = Ds.GetItemById(input.Id);
                         UpdateItemFromInput(input, item);
                         Ds.SaveChanges();
                         model = CreateViewModel(item);
                         model.AddSuccess($"{Entity.Name} {item.Id} updated");
                     }
                     catch (DataStore.ItemNotFoundException) {
-                        TItem item = new();
-                        throw new DataStore.InfoException($"{Entity.Name} {input.Id} not found");
+                        Person item = new();
+                        throw new InfoException($"{Entity.Name} {input.Id} not found");
                     }
                 }
             }
 
-            catch (DataStore.InfoException ex) {
+            catch (InfoException ex) {
                 model = input;
                 AddViewData(model);
                 model.AddFail(ex.Message);
@@ -158,7 +160,7 @@ namespace MVC_8.Controllers {
             catch (DataStore.ItemNotFoundException) {
                 // Item to delete not found, maybe deleted already, just let it pass
             }
-            catch (DataStore.InfoException ex) {
+            catch (InfoException ex) {
                 errorMessage = ex.Message;
             }
 
@@ -198,8 +200,8 @@ namespace MVC_8.Controllers {
         // from this class
         // ======================================================
 
-        abstract protected TInputViewModel CreateViewModel(TItem item);
+        abstract protected TInputViewModel CreateViewModel(Person item);
         abstract protected void AddViewData(TInputViewModel model);
-        abstract public void UpdateItemFromInput(TInputViewModel model, TItem item);
+        abstract public void UpdateItemFromInput(TInputViewModel model, Person item);
     }
 }
