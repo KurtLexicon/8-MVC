@@ -1,7 +1,21 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using MVC_8.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var corsPolicyLocalHost = "LocalHost";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(corsPolicyLocalHost,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
 
 builder.Services.AddSession();
 builder.Services.AddMvc();
@@ -15,6 +29,12 @@ app.UseSession();
 
 app.UseStaticFiles();
 app.UseRouting();
+// global cors policy
+app.UseCors(x => x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed(origin => true) // allow any origin
+    .AllowCredentials()); // allow credentials
 
 app.MapControllerRoute(
     name: "default",
@@ -59,8 +79,13 @@ app.MapControllerRoute(
 );
 
 app.MapControllerRoute(
-    name: "ItemActions",
+    name: "ItemPostActions",
     pattern: "{controller}/{action}"
+);
+
+app.MapControllerRoute(
+    name: "ItemGetActions",
+    pattern: "{controller}/{action}/{value}"
 );
 
 app.Run();

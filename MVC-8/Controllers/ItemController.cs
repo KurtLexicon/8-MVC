@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using MVC_8.Data;
 using MVC_8.Models;
 using MVC_8.Models.Home;
@@ -25,10 +27,19 @@ namespace MVC_8.Controllers {
         // =======================================
         // Get Items
         // =======================================
+ 
+        public class FilterType
+        {
+            public string filter { get; set; } = "";
+        }
+        //        public IActionResult GetItems([FromBody] FilterType filterType)
 
-        [HttpPost]
-        public IActionResult GetItems([FromBody] string filter) {
-            try {
+        [HttpGet]
+        public IActionResult GetItems(string value)
+        {
+            try
+            {
+                string filter = value;
                 int nTotal = Ds.GetNumberOfItems();
                 List<EntityItem> items = Ds.GetItemsFiltered(filter);
                 TListViewModel model = new();
@@ -45,9 +56,10 @@ namespace MVC_8.Controllers {
         // Get Item
         // =======================================
 
-        [HttpPost]
-        public IActionResult GetItem([FromBody] int id) {
+        [HttpGet,HttpPost]
+        public IActionResult GetItem(int value) {
             try {
+                int id = value;
                 ResponseData responseData = new();
 
                 TItem item;
