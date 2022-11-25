@@ -7,6 +7,7 @@ using MVC_8.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 var corsPolicyLocalHost = "LocalHost";
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicyLocalHost,
@@ -33,6 +34,7 @@ builder.Services
     .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.Configure<IdentityOptions>(o => {
     o.Password.RequireLowercase = false;
     o.Password.RequireUppercase = false;
@@ -52,7 +54,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
-// global cors policy
+
 app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader()
@@ -66,19 +68,9 @@ app.MapControllerRoute(
 );
 
 app.MapControllerRoute(
-    name: "IndexActions",
-    pattern: "{controller}/Index",
+    name: "ItemActions",
+    pattern: "{controller}/{action}",
     defaults: new { action = "Index" }
-);
-
-app.MapControllerRoute(
-    name: "ItemPostActions",
-    pattern: "{controller}/{action}"
-);
-
-app.MapControllerRoute(
-    name: "ItemGetActions",
-    pattern: "{controller}/{action}/{value}"
 );
 
 app.Run();

@@ -1,6 +1,5 @@
-﻿using MVC_8.Models.Home;
-
-namespace MVC_8.Models.ViewModels {
+﻿
+namespace MVC_8.Models {
     public class CountryListViewModel : ListViewModel {
         static readonly string[] _rowHeaders = new string[] { "Id", "Name" };
 

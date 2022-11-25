@@ -1,6 +1,5 @@
-﻿using MVC_8.Models.Home;
-
-namespace MVC_8.Models.ViewModels {
+﻿
+namespace MVC_8.Models {
     abstract public class ListViewModel {
         public EntityConst Entity { get; }
         public string[] Headers { get; }

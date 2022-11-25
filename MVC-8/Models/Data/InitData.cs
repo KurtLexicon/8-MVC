@@ -1,4 +1,4 @@
-﻿namespace MVC_8.Models.Home {
+﻿namespace MVC_8.Models {
     static public class InitData {
         private static readonly Random rnd = new();
 

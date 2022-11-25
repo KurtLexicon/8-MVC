@@ -546,7 +546,7 @@ namespace MVC_8.Migrations
                         });
                 });
 
-            modelBuilder.Entity("MVC_8.Models.Home.City", b =>
+            modelBuilder.Entity("MVC_8.Models.City", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -642,7 +642,7 @@ namespace MVC_8.Migrations
                         });
                 });
 
-            modelBuilder.Entity("MVC_8.Models.Home.Country", b =>
+            modelBuilder.Entity("MVC_8.Models.Country", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -671,7 +671,7 @@ namespace MVC_8.Migrations
                         });
                 });
 
-            modelBuilder.Entity("MVC_8.Models.Home.Language", b =>
+            modelBuilder.Entity("MVC_8.Models.Language", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -725,7 +725,7 @@ namespace MVC_8.Migrations
                         });
                 });
 
-            modelBuilder.Entity("MVC_8.Models.Home.Person", b =>
+            modelBuilder.Entity("MVC_8.Models.Person", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -930,13 +930,13 @@ namespace MVC_8.Migrations
 
             modelBuilder.Entity("LanguagePerson", b =>
                 {
-                    b.HasOne("MVC_8.Models.Home.Language", null)
+                    b.HasOne("MVC_8.Models.Language", null)
                         .WithMany()
                         .HasForeignKey("LanguagesId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MVC_8.Models.Home.Person", null)
+                    b.HasOne("MVC_8.Models.Person", null)
                         .WithMany()
                         .HasForeignKey("PeopleId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -994,9 +994,9 @@ namespace MVC_8.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MVC_8.Models.Home.City", b =>
+            modelBuilder.Entity("MVC_8.Models.City", b =>
                 {
-                    b.HasOne("MVC_8.Models.Home.Country", "Country")
+                    b.HasOne("MVC_8.Models.Country", "Country")
                         .WithMany("Cities")
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1005,9 +1005,9 @@ namespace MVC_8.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("MVC_8.Models.Home.Person", b =>
+            modelBuilder.Entity("MVC_8.Models.Person", b =>
                 {
-                    b.HasOne("MVC_8.Models.Home.City", "City")
+                    b.HasOne("MVC_8.Models.City", "City")
                         .WithMany("People")
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1016,12 +1016,12 @@ namespace MVC_8.Migrations
                     b.Navigation("City");
                 });
 
-            modelBuilder.Entity("MVC_8.Models.Home.City", b =>
+            modelBuilder.Entity("MVC_8.Models.City", b =>
                 {
                     b.Navigation("People");
                 });
 
-            modelBuilder.Entity("MVC_8.Models.Home.Country", b =>
+            modelBuilder.Entity("MVC_8.Models.Country", b =>
                 {
                     b.Navigation("Cities");
                 });

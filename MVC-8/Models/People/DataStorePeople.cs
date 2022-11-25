@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVC_8.Data;
 
-namespace MVC_8.Models.Home {
+namespace MVC_8.Models {
     public class DataStorePeople : DataStoreItem<Person> {
         public DataStorePeople(ApplicationDbContext dbContext, DbSet<Person> dbSet) : base(dbContext, dbSet) { }
 

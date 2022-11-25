@@ -1,19 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using MVC_8.Models.Home;
 using System.ComponentModel.DataAnnotations;
-using MVC_8.Models.Shared;
 
-namespace MVC_8.Models.ViewModels {
+namespace MVC_8.Models {
     public class PersonViewModel : DetailsViewModel {
         SelectList _cities = new(Enumerable.Empty<SelectListItem>());
         SelectList _languages = new(Enumerable.Empty<SelectListItem>());
+
+        public List<SelectListItem> SelectListCities { get; set; } = new();
+        public List<SelectListItem> SelectListLanguages { get; set; } = new();
 
         // Properties(other than Id & Name)
 
         [Display(Name = "City")]
         [Required]
         public int CityId { get; set; } = 0;
+        public string CityName { get; set; } = "";
+        public string CountryName { get; set; } = "";
+
 
         [Display(Name = "Phone Number")]
         // Format "+DD-DD DD DD", with "+" and "-" and blanks optional, minimum 3 digits after dash
@@ -31,6 +35,8 @@ namespace MVC_8.Models.ViewModels {
         public PersonViewModel(Person item, IEnumerable<City> cities, IEnumerable<Language> languages) : base(Const.Person, item) {
             Phone = item.Phone;
             CityId = item.City != null ? item.City.Id : 0;
+            CityName = item.City != null ? item.City.Name : "";
+            CountryName = item.City != null && item.City.Country != null ? item.City.Country.Name : "";
             LanguageIds = item.Languages.Select(l => l.Id).ToList();
             AddViewData(cities, languages);
         }
@@ -40,6 +46,21 @@ namespace MVC_8.Models.ViewModels {
         public void AddViewData(IEnumerable<City> cities, IEnumerable<Language> languages) {
             _cities = new(cities, "Id", "Name");
             _languages = new(languages, "Id", "Name");
+
+            cities.ToList().ForEach(x => { x.Country.Cities = new(); });
+            languages.ToList().ForEach(x => { x.People = new(); });
+
+            SelectListCities.Clear();
+            foreach (City city in cities)
+            {
+                SelectListCities.Add(new(city.Id.ToString(), city.Name));
+            }
+
+            SelectListLanguages.Clear();
+            foreach (Language language in languages)
+            {
+                SelectListLanguages.Add(new(language.Id.ToString(), language.Name));
+            }
         }
 
         public SelectList SelectCities() {

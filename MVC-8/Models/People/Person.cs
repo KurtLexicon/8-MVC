@@ -1,4 +1,4 @@
-﻿namespace MVC_8.Models.Home {
+﻿namespace MVC_8.Models {
     public class Person : EntityItem {
         override public int Id { get; set; } = 0;
         override public string Name { get; set; } = "";

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MVC_8.Models;
-using MVC_8.Models.Home;
+
 
 namespace MVC_8.Data {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser> {

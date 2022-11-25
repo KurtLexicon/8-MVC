@@ -1,39 +1,34 @@
-﻿
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MVC_8.Data;
 using MVC_8.Models;
 
 
-namespace MVC_8.Controllers
-{
-    public class PeopleAPIController : Controller
-    {
 
-        private ApplicationDbContext Db { get; set; }
-        private DbSet<Person> DbSet { get; set; }
-        private DataStoreItem<Person> Ds { get; set; }
-        private EntityConst Entity { get; set; } = Const.Person;
-        private PersonWorker Worker { get; set; }
+namespace MVC_8.Controllers {
+    public class LanguagesAPIController : Controller {
+        private ApplicationDbContext DbContext { get; set; }
+        private DataStoreLanguage Ds { get; set; }
+        private EntityConst Entity { get; set; } = Const.Language;
+        private LanguageWorker Worker { get; set; }
 
-        public PeopleAPIController(ApplicationDbContext dbContext) : base()
-        {
-            Db = dbContext;
-            DbSet = dbContext.People;
-            Ds = new DataStorePeople(dbContext, dbContext.People);
-            Worker = new PersonWorker(dbContext);
+        public LanguagesAPIController(ApplicationDbContext dbContext)
+            : base() {
+            DbContext = dbContext;
+            Ds = new DataStoreLanguage(dbContext, dbContext.Languages);
+            Worker = new LanguageWorker(dbContext);
+
         }
 
-        // =======================================
+        // ===================================
         // Get List
-        // =======================================
+        // ===================================
 
         [HttpGet]
-        public JsonResult GetList(string filter)
-        {
+        public JsonResult GetList(string filterText) {
             try
             {
-                List<Person> items = Worker.GetItemsList(filter);
+                List<Language> items = Worker.GetItemsList(filterText);
                 return Json(items);
             }
             catch (Exception e)
@@ -42,17 +37,15 @@ namespace MVC_8.Controllers
             }
         }
 
-        // =======================================
+        // ===================================
         // Get Item
-        // =======================================
+        // ===================================
 
         [HttpGet]
-        public JsonResult GetItem(int id)
-        {
+        public JsonResult GetItem(int id) {
             try
             {
-                Person item = Worker.GetItem(id);
-                PersonApiModel model = new(item);
+                LanguageViewModel model = Worker.GetItem(id);
                 return Json(model);
             }
             catch (Exception e)
@@ -61,20 +54,16 @@ namespace MVC_8.Controllers
             }
         }
 
-
         // =======================================
         // Get Select Lists
         // =======================================
 
         [HttpGet]
-        public JsonResult GetSelectLists()
+        public JsonResult GetSelectLists(int id)
         {
             try
             {
-                var model = new {
-                    SelectListCities = Ds.Cities.Select(x => new { Text = x.Id.ToString(), Value = x.Name }).ToList(),
-                    SelectListLanguages = Ds.Languages.Select(x => new { Text = x.Id.ToString(), Value = x.Name }).ToList(),
-                };
+                var model = new { };
                 return Json(model);
             }
             catch (Exception e)
@@ -88,15 +77,14 @@ namespace MVC_8.Controllers
         // =======================================
 
         [HttpPost]
-        public JsonResult AddOrUpdateItem([FromBody] PersonViewModel input)
+        public JsonResult AddOrUpdateItem([FromBody] LanguageViewModel input)
         {
-            PersonViewModel model;
             try
             {
-                if (!ModelState.IsValid)
+                if (!ModelState.IsValid || input == null)
                     throw new InfoException("Please enter valid data");
 
-                model = input.Id == 0
+                LanguageViewModel model = input.Id == 0
                     ? Worker.AddItem(input)
                     : Worker.UpdateItem(input);
 
@@ -109,8 +97,9 @@ namespace MVC_8.Controllers
 
         }
 
+
         // =======================================
-        // === Delete Item 
+        // Delete Item
         // =======================================
 
         [HttpDelete]
@@ -118,7 +107,8 @@ namespace MVC_8.Controllers
         {
             try
             {
-                SharedViewModel model = Worker.DeleteItem(id);
+                Worker.DeleteItem(id);
+                SharedViewModel model = new();
                 return Json(model);
             }
             catch (Exception e)

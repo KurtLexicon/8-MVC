@@ -1,7 +1,6 @@
-﻿using MVC_8.Models.Home;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace MVC_8.Models.ViewModels {
+namespace MVC_8.Models {
     abstract public class DetailsViewModel {
         // Private Fields
         private EntityConst Entity { get; }

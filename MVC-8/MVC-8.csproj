@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\EntityItems\**" />
+    <Content Remove="Models\EntityItems\**" />
+    <EmbeddedResource Remove="Models\EntityItems\**" />
+    <None Remove="Models\EntityItems\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
@@ -26,7 +33,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Models\EntityItems\" />
   </ItemGroup>
 
 </Project>

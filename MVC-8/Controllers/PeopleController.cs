@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MVC_8.Data;
 using MVC_8.Models;
-using MVC_8.Models.Home;
-using MVC_8.Models.Shared;
-using MVC_8.Models.ViewModels;
+
 
 namespace MVC_8.Controllers {
     public class PeopleController : Controller {
@@ -12,14 +11,16 @@ namespace MVC_8.Controllers {
         private ApplicationDbContext DbContext { get; set; }
         private DataStorePeople Ds { get; set; }
         private EntityConst Entity { get; set; } = Const.Person;
+        private PersonWorker Worker { get; set; }
 
         public PeopleController(ApplicationDbContext dbContext) : base() {
             DbContext = dbContext;
             Ds = new DataStorePeople(dbContext, dbContext.People);
+            Worker = new PersonWorker(dbContext);
         }
 
         // ===================================
-        // Actions
+        // Index
         // ===================================
 
         [Authorize(Roles = "Admin,User")]
@@ -27,63 +28,51 @@ namespace MVC_8.Controllers {
             return View(new PageViewModel(Entity));
         }
 
-        [Authorize(Roles = "Admin,User")]
+        // =======================================
+        // Get List
+        // =======================================
+
+
         [HttpGet]
+        [Authorize(Roles = "Admin, User")]
         public PartialViewResult GetList(string filterText) {
-            int nTotal = Ds.GetNumberOfItems();
-            List<EntityItem> items = Ds.GetItemsFiltered(filterText);
-            PersonListViewModel model = new();
-            model.AddData(items, nTotal, filterText);
+            PersonListViewModel model = Worker.GetList(filterText);
             return PartialView(model);
         }
 
-        [Authorize(Roles = "Admin,User")]
+        // =======================================
+        // Get Item
+        // =======================================
+
         [HttpPost]
+        [Authorize(Roles = "Admin, User")]
         public PartialViewResult GetItem([FromBody] int id) {
-            string errorMessage = "";
-            Person item;
-            try {
-                item = id != 0 ? Ds.GetItemById(id) : new();
-            }
-            catch (DataStore.ItemNotFoundException) {
-                item = new();
-                errorMessage = $"{Entity.Name} {id} not found";
-            }
-
-            PersonViewModel model = new(item, Ds.Cities.ToList(), Ds.Languages.ToList());
-            model.AddFail(errorMessage);
+            PersonViewModel model = Worker.GetItemModel(id);
             return PartialView(model);
         }
 
-        [Authorize(Roles = "Admin,User")]
+        // =======================================
+        // === Add Random Item
+        // =======================================
+
+        [Authorize(Roles = "Admin, User")]
         [HttpPost]
         public PartialViewResult AddRandomItem() {
-            List<City> cities = Ds.Cities.ToList();
-            List<Language> languages = Ds.Languages.ToList();
-
-            Person person = InitData.GetRandomPerson(cities, languages);
-            Ds.AddItem(person);
-
-            PersonViewModel model = new(person, cities, languages);
-            model.AddSuccess($"{Const.Person.Name} {person.Id} added");
-
+            PersonViewModel model = Worker.AddRandomItem();
             return PartialView(model);
         }
 
-        [Authorize(Roles = "Admin,User")]
+        // =======================================
+        // === Add Item
+        // =======================================
+
+        [Authorize(Roles = "Admin, User")]
         [HttpPost]
         public PartialViewResult AddItem([FromBody] PersonViewModel input) {
             PersonViewModel model;
             try {
                 if (!ModelState.IsValid) throw new InfoException("Please enter valid data");
-                if (null == DbContext.Cities.FirstOrDefault(item => item.Id == input.CityId)) {
-                    throw new InfoException("The city does not exist");
-                }
-                List<Language> languages = Ds.GetItemsByIds(Ds.Languages, input.LanguageIds);
-                Person person = input.GetItem(languages);
-                Person item = Ds.AddItem(person);
-                model = new(item, Ds.Cities.ToList(), Ds.Languages.ToList());
-                model.AddSuccess($"{Entity.Name} {item.Id} added");
+                model = Worker.AddItem(input);
             }
 
             catch (InfoException ex) {
@@ -95,26 +84,17 @@ namespace MVC_8.Controllers {
             return PartialView(model);
         }
 
-        [Authorize(Roles = "Admin,User")]
+        // =======================================
+        // === Update Item
+        // =======================================
+
+        [Authorize(Roles = "Admin, User")]
         [HttpPost]
         public PartialViewResult UpdateItem([FromBody] PersonViewModel input) {
             PersonViewModel model;
             try {
                 if (!ModelState.IsValid) throw new InfoException("Please enter valid data");
-                Person? item = DbContext.People.FirstOrDefault(item => item.Id == input.Id);
-                if (item == null) {
-                    throw new InfoException($"{Entity.Name} {input.Id} not found");
-                }
-
-                item.Name = input.Name;
-                item.Phone = input.Phone;
-                item.City = Ds.GetItemById(Ds.Cities, input.CityId);
-                item.CityId = input.CityId;
-                item.Languages = Ds.GetItemsByIds(Ds.Languages, input.LanguageIds);
-                Ds.SaveChanges();
-
-                model = new(item, Ds.Cities.ToList(), Ds.Languages.ToList());
-                model.AddSuccess($"{Entity.Name} {item.Id} updated");
+                model = Worker.UpdateItem(input);
             }
             catch (InfoException ex) {
                 model = input;
@@ -125,19 +105,14 @@ namespace MVC_8.Controllers {
             return PartialView(model);
         }
 
-        [Authorize(Roles = "Admin,User")]
+        // =======================================
+        // === Delete Item
+        // =======================================
+
+        [Authorize(Roles = "Admin, User")]
         [HttpDelete]
         public PartialViewResult DeleteItem(int id) {
-            string errorMessage = "";
-
-            try {
-                Ds.DeleteItem(id);
-            }
-            catch (InfoException ex) {
-                errorMessage = ex.Message;
-            }
-
-            SharedViewModel model = new(errorMessage);
+            SharedViewModel model = Worker.DeleteItem(id);
             return PartialView(model);
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace MVC_8.Models.ViewModels {
+﻿namespace MVC_8.Models {
     public class SharedViewModel {
         // Private Fields
 

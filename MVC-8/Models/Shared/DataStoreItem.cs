@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVC_8.Data;
 
-namespace MVC_8.Models.Home {
+namespace MVC_8.Models {
     public class DataStoreItem<TItem> : DataStore
         where TItem : EntityItem {
 
@@ -49,8 +49,19 @@ namespace MVC_8.Models.Home {
             // Override metod might throw exception
         }
 
-        virtual public List<EntityItem> GetItemsFiltered(string filter) {
+        virtual public List<EntityItem> GetItemsFiltered(string filter)
+        {
             List<EntityItem> ret = new();
+            ret.AddRange(string.IsNullOrEmpty(filter) ?
+                DbSet :
+                DbSet.Where(p => p.Name.Contains(filter))
+             );
+            return ret;
+        }
+
+        virtual public List<TItem> GetTypedItemsFiltered(string filter)
+        {
+            List<TItem> ret = new();
             ret.AddRange(string.IsNullOrEmpty(filter) ?
                 DbSet :
                 DbSet.Where(p => p.Name.Contains(filter))

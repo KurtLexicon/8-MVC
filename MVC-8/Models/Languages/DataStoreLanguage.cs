@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVC_8.Data;
 
-namespace MVC_8.Models.Home {
+namespace MVC_8.Models {
     public class DataStoreLanguage : DataStoreItem<Language> {
         public DataStoreLanguage(ApplicationDbContext db, DbSet<Language> ds) : base(db, ds) { }
 

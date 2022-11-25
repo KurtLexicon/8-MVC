@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVC_8.Data;
 
-namespace MVC_8.Models.Home {
+namespace MVC_8.Models {
     public class DataStore {
 
         public class ItemNotFoundException : Exception { };
@@ -26,12 +26,6 @@ namespace MVC_8.Models.Home {
             TItem? item = dbSet.FirstOrDefault(item => item.Id == id);
             if (item == null) throw new ItemNotFoundException();
             return item;
-        }
-
-        public bool ExistsId<TItem>(DbSet<TItem> dbSet, int id)
-            where TItem : EntityItem {
-            TItem? item = dbSet.FirstOrDefault(item => item.Id == id);
-            return item != null;
         }
 
         public List<TItem> GetItemsByIds<TItem>(DbSet<TItem> dbSet, List<int> ids)
